@@ -1,0 +1,66 @@
+/* Main colors
+blue: #4876B1
+orange: #E27F27
+green: #5C9A2E
+ */
+
+.reveal .slides > section, .reveal .slides > section > section {
+  padding: 0 !important;
+}
+
+.reveal.overview .slides section.present {
+  outline: 10px solid red;
+}
+
+.wrapper{
+  display: grid;
+  grid-template-columns: 3fr 0.70fr;
+}
+
+.outline li{
+  list-style: none;
+}
+
+.outline-heading{
+  color:rgb(140, 186, 247);
+  margin-bottom: 40px;
+  margin-top:20px;
+}
+
+.nav{
+  background: #4876B1;
+  height:100vh;
+  float: right;
+  padding-left: 30px;
+  padding-right:20px;
+}
+
+.nav .outline, .nav .outline-heading {
+  text-align: left;
+  font-size: 30px;
+  color:rgb(140, 186, 247)
+}
+
+.content{
+  float: left;
+  background: #ffffff;
+  color:#000;
+  width:100%;
+  height:100%;
+  /* padding-top:100px; */
+}
+
+.outline-active{
+  color:#ffffff; 
+  font-size: 42px;
+  margin-bottom:20px;
+}
+.arrow-right {
+  width: 0; 
+  height: 0;
+  margin-left:-30px; 
+  margin-top:-50px; 
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #ffffff;
+}
