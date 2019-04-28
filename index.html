@@ -10,6 +10,11 @@
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css">
 		<link rel="stylesheet" href="css/slides/styles.css">
+		<link rel="stylesheet" href="css/slides/viz_styles.css">
+
+		<!-- <link rel="stylesheet" href="js/katex/katex.min.css">
+		<script src="js/katex/katex.min.js"></script> -->
+		<script src="js/pumbaa.js"></script>
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/monokai.css">
@@ -30,10 +35,11 @@
 				<section>
 					<p style="color:#8E8883">Materials Search</p>
 					<p>Metal - Halide Perovskites for photovoltaic applications</p>
+					<!-- plot test -->
 				</section>
 
 				<!-- SLIDE #2 -->
-				<section data-background-color="#4876B1">
+				<!-- <section data-background-color="#4876B1">
 					<div class="outline-heading">Outline</div>
 					<div class="outline">
 						Motivation<br>
@@ -42,14 +48,19 @@
 						Model<br>
 						Conclusion<br>
 					</div>
-				</section>
+				</section> -->
 
 				<!-- SLIDE #3 -->
 				<section data-background-color="#4876B1">
 						<section>
 						<div class="wrapper">
 							<div class="content">
-									SUBSLIDE 0
+									<div class="content-heading">
+											Research-Cell Efficiency
+									</div>
+									<div class="viz">
+											<div class="fig-container" data-file="viz/history_photovoltaics.html"></div>
+									</div>
 							</div>
 							<div class="nav">
 									<div class="outline-heading">Outline</div>
@@ -69,8 +80,8 @@
 					<!-- SUBSECTION #1 -->
 					<section>
 							<div class="wrapper">
-								<div class="content">
-										SUBSLIDE 1
+									<div class="content">
+									SUBSLIDE plot2 <br>
 								</div>
 								<div class="nav">
 										<div class="outline-heading">Outline</div>
@@ -166,6 +177,7 @@
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
         progress: false,
+				navigationMode: 'linear',
 				transition: 'none', // none/fade/slide/convex/concave/zoom
 				width: "100%",
 				height: "100%",
@@ -183,15 +195,10 @@
 					{ src: 'plugin/highlight/highlight.js', async: true },
 					{ src: 'plugin/zoom-js/zoom.js', async: true },
 					{ src: 'plugin/math/math.js', async: true },
+					{ src: 'node_modules/reveald3/reveald3.js' },
+					// { src: 'js/katex/katex.min.js'}
 					// { src: 'plugin/chalkboard/chalkboard.js', async:true }
-				],
-				// keyboard: {
-				// 				67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'c' is pressed
-				// 				66: function() { RevealChalkboard.toggleChalkboard() },	// toggle chalkboard when 'b' is pressed
-				// 				46: function() { RevealChalkboard.clear() },	// clear chalkboard when 'DEL' is pressed
-				// 				8: function() { RevealChalkboard.reset() },	// reset chalkboard data on current slide when 'BACKSPACE' is pressed
-				// 				68: function() { RevealChalkboard.download() },	// downlad recorded chalkboard drawing when 'd' is pressed
-				// 		},
+				]
 			});
 		</script>
 	</body>

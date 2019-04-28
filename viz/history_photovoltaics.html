@@ -1,0 +1,331 @@
+<!-- viz -->
+<!DOCTYPE html>
+<link rel="stylesheet" href="../js/katex/katex.min.css">
+<script src="../js/katex/katex.min.js"></script>
+<script src="../js/d3.v5.min.js"></script>
+<script src="../js/pumbaa.js"></script>
+<div id="dataviz"></div>
+<style>
+path.area {
+  fill: #e7e7e7;
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+.tooltip {	
+  position: absolute;			
+  text-align: center;
+  /* height: 28px;					 */			
+  font: 12px sans-serif;		
+  border: 0px;	
+  pointer-events: none;		
+  font-size: 16px;	
+}
+#tooltip-left{
+  color:#ffffff;
+  padding: 2px;	
+  float: left;
+}
+#tooltip-right{
+  float: left;
+  padding: 2px;	
+  color:#625F5D;
+  background: hsla(0, 0%, 100%, 0.525);
+  /* opacity: 0.5; */
+}
+.x-axis text, .y-axis text{
+	font-size: 20px;
+	fill:#625F5D;
+}
+.x-axis line, .y-axis line{
+  stroke: #625F5D;
+}
+.x-axis path, .y-axis path{
+  display: none;
+}
+.legend-head{
+  font-size: 18px;
+}
+svg circle{
+  cursor: crosshair
+}
+</style>
+
+<script>
+var margin = {top: 80, right: 80, bottom: 80, left: 80},
+    width = 960 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+//time duration for the transition
+var duration = 1000;
+// Scales and axes. Note the inverted domain for the y-scale: bigger is up!
+var x = d3.scaleTime().range([0, width]),
+    y = d3.scaleLinear().range([height, 0]);
+
+// An area generator, for the light fill.
+var area = d3.area()
+    .x(d => x(d.date))
+    .y0(height)
+    .y1(d => y(d.efficency));
+
+// A line generator, for the dark stroke.
+var line = d3.line() //.defined(function(d) { return d.efficency != 0; })
+    .x(d => x(d.date))
+    .y(d => y(d.efficency));
+
+d3.csv("history_photovoltaics.csv",type).then(data => draw(data));
+
+function draw(data){
+  var Si = data.filter(d => d.symbol == "Si");
+  var CdTe = data.filter(d => d.symbol == "CdTe");
+  var GaAs = data.filter(d => d.symbol == 'GaAs');
+  var MAPI = data.filter(d => d.symbol == 'MAPI');
+  var Junc2 = data.filter(d => d.symbol == 'Junc2');
+  var Junc3 = data.filter(d => d.symbol == 'Junc3');
+  var Junc4 = data.filter(d => d.symbol == 'Junc4');
+  var QDot = data.filter(d => d.symbol == 'QDot');
+  var thinFilm = data.filter(d => d.symbol == 'thinFilm');
+  var tinBased = data.filter(d => d.symbol == 'tinBased');
+  var Bi_Based = data.filter(d => d.symbol == 'Bi_Based');
+  var Sb_Based = data.filter(d => d.symbol == 'Sb_Based');
+  //chop line into segmants and get their length
+  function segments(data, segments){
+      segments = [0];
+      for(var i = 1; i < data.length; i++) {
+        var tmp = svg.append("path")
+            .datum([data[i-1], data[i]])
+            .attr("d", line);
+        segments.push(segments[i-1] + tmp.node().getTotalLength());
+        tmp.remove();
+    }
+    return segments
+  }
+
+  // Compute the minimum and maximum date, and the maximum efficency.
+  x.domain([parse("1974-Jan"), parse('2020-Jan')]);
+  y.domain([-0.2,50]).nice(); //[0, d3.max(Si, function(d) { return d.efficency; })]
+
+  // Add an SVG element with the desired dimensions and margin.
+  var svg = d3.select("#dataviz").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+  // Add the x-axis.
+  svg.append("g")
+      .attr("class", "x-axis")
+			.attr("transform", "translate(0," + (height) + ")")
+      .call(d3.axisBottom(x).ticks(10)); //.tickSize(-height)
+
+  // Add the y-axis.
+  svg.append("g")
+      .attr("class", "y-axis")
+      .attr("transform", "translate(" + -1 + ",0)")
+      .call(d3.axisLeft(y).ticks(6));//.tickSize(-width)
+    
+  // var data1=[GaAs, Si, CdTe, tinBased, QDot, Sb-Based,  MAPI, thinFilm, Bi-Based]
+  // var data2=[Junc4,Junc3, Junc2]
+  // var color1=['#609E3A','#4876B0', '#E48734','#E89B97', '#888AAE', '#659792',  '#D1576E', '#919EC8', '#C76BBD']
+  // var color2=['#BF7192', '#8FB992',  '#72a5e7']
+  // var names = ['GaAs', 'Si', 'CdTe', 'tinBased', 'QDot', 'Sb-Based',  'MAPI', 'thinFilm', 'Bi-Based']
+
+  var data_single=[GaAs, Si, CdTe, Sb_Based,  MAPI, Bi_Based]
+  var name_single=['GaAs', 'Si', 'CdTe', 'Sb-Based',  "MAPI", 'Bi-Based']
+  var color_single=['#6ba547','#4876B0', '#E48734', '#659792',  '#D1576E', '#C76BBD']
+  var data_multi=[Junc4, Junc3, Junc2]
+  var name_multi=['Four-junction', 'Three-junction', 'Two-junction']
+  var color_multi=['#72a5e7', '#72a5e7', '#72a5e7']
+  var data_others=[QDot,thinFilm,]
+  var name_others=['Quantum dot','Thin-film']
+  var color_others=['#919EC8','#8FB992']
+
+  trace(data_multi,color_multi,'multi')
+  trace(data_single,color_single,'single')
+  trace(data_others,color_others,'others')
+
+  legend(name_single,color_single,50,'single')
+  legend(name_multi,color_multi,200,'multi')
+  legend(name_others,color_others,350,'others')
+
+function legend(names,colors,x_pos,cls){
+  if (cls=='multi') {
+    for (k=0;k<names.length;k++){
+      for(l=3;l>=k;l--){
+      svg.selectAll("mydots").data([names[k]])
+      .enter().append("circle")
+      .attr("r", (8-(7-(l*2))))
+      .attr("cx", x_pos)
+      .attr("cy", k*25)
+      .attr("fill", colors[k])
+      .attr("stroke", '#ffffff')
+      .attr("stroke-width", 1)
+      .attr("opacity",0)
+      .transition()
+      .delay(duration)
+      .attr("opacity",1)
+      }
+    }
+  } else {
+    svg.selectAll("mydots").data(names)
+    .enter().append("circle")
+    .attr("r", 6)
+    .attr("cx", x_pos)
+    .attr("cy", function(d,i){ return i*25})
+    .attr("fill", function(d,i){ return colors[i]})
+    .attr("stroke", '#ffffff')
+    .attr("stroke-width", 1)
+    .attr("opacity",0)
+    .transition()
+    .delay(duration)
+    .attr("opacity",1)
+  }
+  //labels
+  svg.selectAll("mylabels").data(names)
+  .enter().append("text")
+    .attr("x", (x_pos+20))
+    .attr("y", function(d,i){ return i*25}) 
+    .attr("fill", function(d,i){ return colors[i]})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .attr("alignment-baseline", "middle")
+    .attr("opacity",0)
+    .transition()
+    .delay(duration)
+    .attr("opacity",1)
+  //heading
+  if(cls=='single'){
+    lhead = 'Single-Junction'
+  }else if(cls=='multi'){
+    lhead = 'Multi-Junction'
+  }else{
+    lhead='Others'
+  }
+  svg.selectAll("labels").data([lhead])
+  .enter().append("text")
+  .attr('class','legend-head')
+    .attr("x", x_pos)
+    .attr("y", -30) 
+    .attr("fill", '#8B8783')
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .attr("alignment-baseline", "middle")
+    .attr("opacity",0)
+    .transition()
+    .delay(duration)
+    .attr("opacity",1)
+}
+
+  // The scatter+line plot
+  function trace(data, color, cls){
+    for(var k = 0; k < data.length; k++) {
+    var path = svg.selectAll(`line${k}`).data([data[k]]).enter()
+      .append('path')
+      .attr('class', 'line')
+      .attr('stroke', color[k])
+      .attr("stroke-width", 4)
+      .attr("fill",'none')
+      .attr("opacity",0.8)
+      .attr('d', line) //.defined(function(d) { return d.efficency != 0; })
+
+  var totalLength = path.node().getTotalLength();
+  var seg = segments(data[k], seg)
+  path.attr("stroke-dasharray", totalLength + " " + totalLength)
+    .attr("stroke-dashoffset", totalLength)
+    .transition()
+    .duration(duration)
+    .ease(d3.easeLinear)
+    .attr("stroke-dashoffset", 0)
+    
+
+    // hide line till valid data
+    svg.selectAll(`line${k}`).data([[data[k][0],data[k][1]]]).enter()
+      .append('path')
+      .attr('class', 'line')
+      .attr('stroke', '#ffffff')
+      .attr("stroke-width", 6)
+      .attr("fill",'none')
+      .attr('d', line)
+
+    function makeDot(data,color,strokeColor,strokeWidth,rad, ispointer){
+      var dot=svg.selectAll(`dot${k}`)
+      .data(data[k]) //data[i].filter(function(d) { return d.efficency != 0; })
+      .enter().append("circle")
+      .attr('class',"dots")
+      if(ispointer){
+        dot.on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+      }
+      dot.attr("r", rad) // since highest junctions are on the bottom (z-index)
+      .attr("cx", d => x(d.date))
+      .attr("cy", d => y(d.efficency))
+      .attr("stroke", strokeColor)
+      .attr("stroke-width", strokeWidth)
+      .attr("fill", color[k])
+      .attr("opacity",0)
+      .transition()
+      .delay((d,i) => (seg[i]*duration/totalLength))
+      .ease(d3.easeLinear)
+      .attr("opacity",1)
+      .filter(function(d) { return d.efficency == 0; }).attr("opacity",0)
+      return dot
+    }
+  
+    if(cls=='multi'){
+      strokeColor="#ffffff"
+      for(l=3;l>=k;l--){
+        var mousePointer=false
+        if(l==3){mousePointer=true}
+        makeDot(data,color,strokeColor,1,(8-(7-(l*2))),mousePointer)
+      }
+    }else{
+      strokeColor="#ffffff"
+      makeDot(data,color,strokeColor,1,6,true)
+    }
+
+    }
+  }
+}
+
+// helper functions
+var parse = d3.timeParse("%Y-%b") 
+var format =d3.timeFormat("%Y")
+
+// Parse dates and numbers. We assume Si are sorted by date.
+function type(d) {
+  d.date = parse(d.date);
+  d.efficency = +d.efficency;
+  return d;
+}
+// create a tooltip
+var Tooltip = d3.select("#dataviz")
+  .append("div")
+  .style("opacity", 0)
+  .attr("class", "tooltip")
+
+// Three function that change the tooltip when user hover / move / leave a cell
+var mouseover = function(d) {
+  Tooltip
+  .style("opacity", 1)
+  d3.select(this)
+  .attr("stroke",'red')
+  .attr('stroke-width',2)
+}
+
+var mousemove = function(d) {
+  bgColor=d3.select(this).attr("fill")
+  Tooltip
+  .html(
+    `<div id='tooltip-left' style="background:${bgColor}">`+ format(d.date) +`, ` + d.efficency+`</div><div id='tooltip-right' style="color:${bgColor}">`+d.symbol+`</div>`
+    )
+  .style("left", (d3.mouse(this)[0]+40) + "px")
+  .style("top", (d3.mouse(this)[1]+60) + "px")
+}
+
+var mouseleave = function(d) {
+    Tooltip.style("opacity", 0)
+    d3.select(this).attr("stroke",'none')
+}
+
+</script>
