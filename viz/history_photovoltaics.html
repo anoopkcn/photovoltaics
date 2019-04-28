@@ -57,7 +57,7 @@ var margin = {top: 80, right: 80, bottom: 80, left: 80},
     width = 960 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 //time duration for the transition
-var duration = 1000;
+var duration = 50000;
 // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
 var x = d3.scaleTime().range([0, width]),
     y = d3.scaleLinear().range([height, 0]);
@@ -124,31 +124,31 @@ function draw(data){
       .attr("transform", "translate(" + -1 + ",0)")
       .call(d3.axisLeft(y).ticks(6));//.tickSize(-width)
     
-  // var data1=[GaAs, Si, CdTe, tinBased, QDot, Sb-Based,  MAPI, thinFilm, Bi-Based]
-  // var data2=[Junc4,Junc3, Junc2]
-  // var color1=['#609E3A','#4876B0', '#E48734','#E89B97', '#888AAE', '#659792',  '#D1576E', '#919EC8', '#C76BBD']
-  // var color2=['#BF7192', '#8FB992',  '#72a5e7']
-  // var names = ['GaAs', 'Si', 'CdTe', 'tinBased', 'QDot', 'Sb-Based',  'MAPI', 'thinFilm', 'Bi-Based']
-
-  var data_single=[GaAs, Si, CdTe, Sb_Based,  MAPI, Bi_Based]
-  var name_single=['GaAs', 'Si', 'CdTe', 'Sb-Based',  "MAPI", 'Bi-Based']
-  var color_single=['#6ba547','#4876B0', '#E48734', '#659792',  '#D1576E', '#C76BBD']
+  var data_single=[GaAs, Si, CdTe]
+  var data_single_new=[ Sb_Based,  MAPI, Bi_Based]
+  var name_single=['GaAs', 'Si', 'CdTe']
+  var name_single_new=[ 'Sb-Based',  "MAPI (CH$_3$NH$_3$PbI$_3$)".toTex(), 'Bi-Based']
+  var color_single=['#6ba547','#4876B0', '#E48734']
+  var color_single_new=[ '#659792',  '#D1576E', '#C76BBD']
   var data_multi=[Junc4, Junc3, Junc2]
   var name_multi=['Four-junction', 'Three-junction', 'Two-junction']
   var color_multi=['#72a5e7', '#72a5e7', '#72a5e7']
   var data_others=[QDot,thinFilm,]
   var name_others=['Quantum dot','Thin-film']
-  var color_others=['#919EC8','#8FB992']
+  var color_others=['#919EC8','#72a5e7']
 
   trace(data_multi,color_multi,'multi')
   trace(data_single,color_single,'single')
   trace(data_others,color_others,'others')
+  trace(data_single_new,color_single_new,'single_new')
 
   legend(name_single,color_single,50,'single')
-  legend(name_multi,color_multi,200,'multi')
-  legend(name_others,color_others,350,'others')
+  legend(name_single_new,color_single_new,50,'single_new')
+  legend(name_multi,color_multi,250,'multi')
+  legend(name_others,color_others,450,'others')
 
 function legend(names,colors,x_pos,cls){
+  var dur=duration/2
   if (cls=='multi') {
     for (k=0;k<names.length;k++){
       for(l=3;l>=k;l--){
@@ -162,11 +162,52 @@ function legend(names,colors,x_pos,cls){
       .attr("stroke-width", 1)
       .attr("opacity",0)
       .transition()
-      .delay(duration)
+      .delay(duration*4/10)
       .attr("opacity",1)
       }
     }
-  } else {
+      //labels
+    svg.selectAll("mylabels2").data(names)
+      .enter().append("foreignObject")
+      .attr("width", 150)
+      .attr("height", 20)
+      .attr("x", x_pos+20)
+      .attr("y", function(d,i){ return i*25-10})
+      .style("color", function(d,i){ return colors[i]})
+      // .style("font", "14px 'Helvetica Neue'")
+      .html(function(d){ return d})
+      .attr("opacity",0)
+      .transition()
+      .delay(duration*4/10)
+      .attr("opacity",1)  
+  }else if (cls=='single_new') {
+    svg.selectAll("mydots").data(names)
+    .enter().append("circle")
+    .attr("r", 6)
+    .attr("cx", x_pos)
+    .attr("cy", function(d,i){ return 75+i*25})
+    .attr("fill", function(d,i){ return colors[i]})
+    .attr("stroke", '#ffffff')
+    .attr("stroke-width", 1)
+    .attr("opacity",0)
+    .transition()
+    .delay(duration*7.5/10)
+    .attr("opacity",1)
+     //labels
+  svg.selectAll("mylabels2").data(names)
+    .enter().append("foreignObject")
+    .attr("width", 150)
+    .attr("height", 20)
+    .attr("x", x_pos+20)
+    .attr("y", function(d,i){ return 75+i*25-10})
+    .style("color", function(d,i){ return colors[i]})
+    // .style("font", "14px 'Helvetica Neue'")
+    .html(function(d){ return d})
+    .attr("opacity",0)
+    .transition()
+    .delay(duration*7.5/10)
+    .attr("opacity",1)
+  }else if (cls=='others'){
     svg.selectAll("mydots").data(names)
     .enter().append("circle")
     .attr("r", 6)
@@ -177,29 +218,60 @@ function legend(names,colors,x_pos,cls){
     .attr("stroke-width", 1)
     .attr("opacity",0)
     .transition()
-    .delay(duration)
+    .delay(duration*6.5/10)
     .attr("opacity",1)
-  }
-  //labels
-  svg.selectAll("mylabels").data(names)
-  .enter().append("text")
-    .attr("x", (x_pos+20))
-    .attr("y", function(d,i){ return i*25}) 
-    .attr("fill", function(d,i){ return colors[i]})
-    .text(function(d){ return d})
-    .attr("text-anchor", "left")
-    .attr("alignment-baseline", "middle")
+     //labels
+  svg.selectAll("mylabels2").data(names)
+    .enter().append("foreignObject")
+    .attr("width", 150)
+    .attr("height", 20)
+    .attr("x", x_pos+20)
+    .attr("y", function(d,i){ return i*25-10})
+    .style("color", function(d,i){ return colors[i]})
+    // .style("font", "14px 'Helvetica Neue'")
+    .html(function(d){ return d})
     .attr("opacity",0)
     .transition()
-    .delay(duration)
+    .delay(duration*6.5/10)
     .attr("opacity",1)
+  }else {
+  svg.selectAll("mydots").data(names)
+    .enter().append("circle")
+    .attr("r", 6)
+    .attr("cx", x_pos)
+    .attr("cy", function(d,i){ return i*25})
+    .attr("fill", function(d,i){ return colors[i]})
+    .attr("stroke", '#ffffff')
+    .attr("stroke-width", 1)
+    // .attr("opacity",0)
+    // .transition()
+    // .delay((d,i)=>i*duration/names.length)
+    // .attr("opacity",1)
+     //labels
+  svg.selectAll("mylabels2").data(names)
+    .enter().append("foreignObject")
+    .attr("width", 150)
+    .attr("height", 20)
+    .attr("x", x_pos+20)
+    .attr("y", function(d,i){ return i*25-10})
+    .style("color", function(d,i){ return colors[i]})
+    // .style("font", "14px 'Helvetica Neue'")
+    .html(function(d){ return d})
+  }
+
   //heading
   if(cls=='single'){
     lhead = 'Single-Junction'
+    dur=0
+  }else if(cls=='single_new'){
+    lhead = ''
+    dur=duration*7.5/10
   }else if(cls=='multi'){
     lhead = 'Multi-Junction'
+    dur=duration*4/10
   }else{
     lhead='Others'
+    dur=duration*6.5/10
   }
   svg.selectAll("labels").data([lhead])
   .enter().append("text")
@@ -212,7 +284,7 @@ function legend(names,colors,x_pos,cls){
     .attr("alignment-baseline", "middle")
     .attr("opacity",0)
     .transition()
-    .delay(duration)
+    .delay(dur)
     .attr("opacity",1)
 }
 
@@ -236,7 +308,6 @@ function legend(names,colors,x_pos,cls){
     .duration(duration)
     .ease(d3.easeLinear)
     .attr("stroke-dashoffset", 0)
-    
 
     // hide line till valid data
     svg.selectAll(`line${k}`).data([[data[k][0],data[k][1]]]).enter()
@@ -310,7 +381,7 @@ var mouseover = function(d) {
   .style("opacity", 1)
   d3.select(this)
   .attr("stroke",'red')
-  .attr('stroke-width',2)
+  .attr('stroke-width',3)
 }
 
 var mousemove = function(d) {
