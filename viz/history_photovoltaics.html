@@ -9,7 +9,6 @@
 path.area {
   fill: #e7e7e7;
 }
-
 .axis {
   shape-rendering: crispEdges;
 }
@@ -34,6 +33,11 @@ path.area {
   background: hsla(0, 0%, 100%, 0.525);
   /* opacity: 0.5; */
 }
+.final-state{
+  color: #ffffff;
+  padding: 4px;
+  clear:both;
+}
 .x-axis text, .y-axis text{
 	font-size: 20px;
 	fill:#625F5D;
@@ -57,7 +61,8 @@ var margin = {top: 80, right: 80, bottom: 80, left: 80},
     width = 960 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 //time duration for the transition
-var duration = 50000;
+var duration = 30000; //presentation 50000
+// var duration = 1000; //test
 // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
 var x = d3.scaleTime().range([0, width]),
     y = d3.scaleLinear().range([height, 0]);
@@ -146,6 +151,56 @@ function draw(data){
   legend(name_single_new,color_single_new,50,'single_new')
   legend(name_multi,color_multi,250,'multi')
   legend(name_others,color_others,450,'others')
+
+  finalStanding(data_single,color_single,[0,1]) //array specifies which data to show here 0 and 1
+  finalStanding(data_multi,color_multi,[0,1,2])
+  finalStanding(data_single_new,color_single_new,[0,1])
+  finalStanding(data_others,color_others,[0])
+
+//clock
+svg.selectAll("clock").data(['2016'])
+  .enter().append("foreignObject")
+  .text('1975')
+  .attr('class','clock')
+  .attr("width", 200)
+  .attr("height", 25)
+  .attr("x", width-35)
+  .attr("y", height) 
+  .style("color", '#5875AD')
+  .style("font-size","26px")
+  .style("background","#ffffff")
+  .attr("text-anchor", "left")
+  .attr("alignment-baseline", "middle")
+  .transition()
+  .duration(duration)
+  .ease(d3.easeLinear)
+  .tween("text",function(d){
+    var i = d3.interpolateRound(+this.textContent,+d)
+    return (t) => this.textContent = i(t);
+  })
+
+clock=['1975','1976','1977','1978']
+
+
+// final standing bars
+function finalStanding(data,color,cols){
+  for(k=0;k<cols.length;k++){
+    var len = data[cols[k]].length
+    svg.selectAll('fstate').data([data[cols[k]][len-1]])
+    .enter().append("foreignObject")
+    .attr('class','final-state')
+    .attr("width", 200)
+    .attr("height", 25)
+    .attr("x", d => x(d.date)+20)
+    .attr("y", d => y(d.efficency)-15)
+    .html((d)=>d.efficency)
+    .style('background',color[cols[k]])
+    .attr("opacity",0)
+    .transition()
+    .delay(duration)
+    .attr("opacity",1)
+  }
+}
 
 function legend(names,colors,x_pos,cls){
   var dur=duration/2
@@ -358,7 +413,7 @@ function legend(names,colors,x_pos,cls){
     }
   }
 }
-
+//----------------------------------------------------------------
 // helper functions
 var parse = d3.timeParse("%Y-%b") 
 var format =d3.timeFormat("%Y")
@@ -387,6 +442,7 @@ var mouseover = function(d) {
 var mousemove = function(d) {
   bgColor=d3.select(this).attr("fill")
   Tooltip
+  .attr("alignment-baseline", "middle")
   .html(
     `<div id='tooltip-left' style="background:${bgColor}">`+ format(d.date) +`, ` + d.efficency+`</div><div id='tooltip-right' style="color:${bgColor}">`+d.symbol+`</div>`
     )

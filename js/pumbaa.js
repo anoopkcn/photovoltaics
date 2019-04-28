@@ -1,10 +1,5 @@
 // this files depend on "jquery-3.4.0.min.js" and "d3.v5.min.js"
 //load them upon calling these functions
-function test(arg) {
-  console.log(arg)
-}
-
-// test("hello")
 
 /**
  * Returns LaTex formatted string
