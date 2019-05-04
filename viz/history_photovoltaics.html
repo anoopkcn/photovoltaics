@@ -58,11 +58,11 @@ svg circle{
 
 <script>
 var margin = {top: 80, right: 80, bottom: 80, left: 80},
-    width = 960 - margin.left - margin.right,
+    width = 900 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 //time duration for the transition
-var duration = 30000; //presentation 50000
-// var duration = 1000; //test
+// var duration = 10000; //presentation 50000
+var duration = 1000; //test
 // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
 var x = d3.scaleTime().range([0, width]),
     y = d3.scaleLinear().range([height, 0]);
@@ -193,7 +193,7 @@ function finalStanding(data,color,cols){
     .attr("height", 25)
     .attr("x", d => x(d.date)+20)
     .attr("y", d => y(d.efficency)-15)
-    .html((d)=>d.efficency)
+    .html((d)=>d3.format(".2f")(d.efficency))
     .style('background',color[cols[k]])
     .attr("opacity",0)
     .transition()
