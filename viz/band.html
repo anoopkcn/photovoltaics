@@ -27,7 +27,7 @@
       .x(d => x(d.k))
       .y(d => y(d.e));
 
-  d3.csv("bands.1", type).then(data => {
+  d3.csv("band_test.csv", type).then(data => {
     draw(data)
   });
 
@@ -72,6 +72,8 @@
       .attr('cy', d => y(d.e))
       // .attr('stroke','blue')
       .attr('fill','blue')
+
+    var highSymmetry = []
 
     // svg.append("path")
     //       .data([data])
