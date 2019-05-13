@@ -12,37 +12,6 @@ green: #5C9A2E
   /* content: url('./red_dot.png') */
 }
 
-.wrapper{
-  display: grid;
-  grid-template-columns: 3fr 0.70fr;
-}
-
-.outline li{
-  list-style: none;
-}
-
-.outline-heading{
-  color:rgb(140, 186, 247);
-  margin-bottom: 30px;
-  margin-top:20px;
-  font-size: 34px;
-}
-
-.nav{
-  /* background: #6ba547; */
-  background: #4876B1;
-  height:100vh;
-  float: right;
-  padding-left: 30px;
-  padding-right:20px;
-}
-
-.nav .outline, .nav .outline-heading {
-  text-align: left;
-  font-size: 30px;
-  color:rgb(140, 186, 247)
-}
-
 .content{
   float: left;
   background: #ffffff;
