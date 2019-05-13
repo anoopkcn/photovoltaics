@@ -3,13 +3,13 @@ blue: #4876B1
 orange: #E27F27
 green: #5C9A2E
  */
+ 
 .reveal .slides > section, .reveal .slides > section > section {
   padding: 0 !important;
 }
 
 .reveal.overview .slides section.present {
   outline: 10px solid #E27F27;
-  /* content: url('./red_dot.png') */
 }
 
 .content{

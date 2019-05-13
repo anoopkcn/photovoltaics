@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "eslint": "^5.16.0",
+    "eslint-plugin-html": "^5.0.5",
     "express": "^4.16.2",
     "extend": ">=3.0.2",
     "grunt": "^1.0.4",

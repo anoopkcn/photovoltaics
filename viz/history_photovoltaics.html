@@ -80,6 +80,10 @@ var line = d3.line() //.defined(function(d) { return d.efficency != 0; })
 
 d3.csv("history_photovoltaics.csv",type).then(data => draw(data));
 
+/**
+ * @param  {data}
+ * @return {svg}
+ */
 function draw(data){
   var Si = data.filter(d => d.symbol == "Si");
   var CdTe = data.filter(d => d.symbol == "CdTe");
@@ -444,7 +448,10 @@ var mousemove = function(d) {
   Tooltip
   .attr("alignment-baseline", "middle")
   .html(
-    `<div id='tooltip-left' style="background:${bgColor}">`+ format(d.date) +`, ` + d.efficency+`</div><div id='tooltip-right' style="color:${bgColor}">`+d.symbol+`</div>`
+    `<div id='tooltip-left' style="background:${bgColor}">`
+    + format(d.date) +`, ` + d.efficency
+    +`</div><div id='tooltip-right' style="color:${bgColor}">`
+    +d.symbol+`</div>`
     )
   .style("left", (d3.mouse(this)[0]+40) + "px")
   .style("top", (d3.mouse(this)[1]+60) + "px")
