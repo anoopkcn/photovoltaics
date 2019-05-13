@@ -4,7 +4,9 @@
 <script src="../js/d3.v5.min.js"></script>
 <script src="../js/pumbaa.js"></script>
 <div id="dataviz-1"></div>
+
 <svg></svg>
+
 <style>
   .axis {
     shape-rendering: crispEdges;
@@ -53,96 +55,96 @@
 
   function draw(data){
 
-  var kmin = d3.min(data, d => d.k)
-  var kmax = d3.max(data, d => d.k)
-  var emax = 5
-  var emin = -9
+    var kmin = d3.min(data, d => d.k)
+    var kmax = d3.max(data, d => d.k)
+    var emax = 5
+    var emin = -9
 
-  x.domain([kmin,kmax])
-  y.domain([emin,emax])
+    x.domain([kmin,kmax])
+    y.domain([emin,emax])
 
-  // A line generator, for the dark stroke.
-  var line = d3.line().defined(function(d,i) { 
-    var next = 0
-    if (i<data.length-1){
-      next = data[i+1].k
-      return d.k <= next && d.e >=emin && d.e <=emax ;
-      } 
-    })
-    .x(d => x(d.k))
-    .y(d => y(d.e));
+    // A line generator, for the dark stroke.
+    var line = d3.line().defined(function(d,i) { 
+      var next = 0
+      if (i<data.length-1){
+        next = data[i+1].k
+        return d.k <= next && d.e >=emin && d.e <=emax ;
+        } 
+      })
+      .x(d => x(d.k))
+      .y(d => y(d.e));
 
-    var hSym =[
-      {'x':0.00000,'T': '$\\Gamma$'.toTex()},
-      {'x':0.45562,'T': '$R$'.toTex()},
-      {'x':0.82763,'T': '$X$'.toTex()},
-      {'x':1.09068,'T': '$M$'.toTex()},
-      {'x':1.46269,'T': '$\\Gamma$'.toTex()},
-      {'x':1.72574,'T': '$X$'.toTex()}
-    ]
+      var hSym =[
+        {'x':0.00000,'T': '$\\Gamma$'.toTex()},
+        {'x':0.45562,'T': '$R$'.toTex()},
+        {'x':0.82763,'T': '$X$'.toTex()},
+        {'x':1.09068,'T': '$M$'.toTex()},
+        {'x':1.46269,'T': '$\\Gamma$'.toTex()},
+        {'x':1.72574,'T': '$X$'.toTex()}
+      ]
 
-    // Add an SVG element with the desired dimensions and margin.
-    var svg = d3.select("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      // Add an SVG element with the desired dimensions and margin.
+      var svg = d3.select("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-    // Add the x-axis.
-    svg.append("g")
-        .attr("class", "x-axis")
+      // Add the x-axis.
+      svg.append("g")
+          .attr("class", "x-axis")
+          .attr("transform", "translate(0," + (height) + ")")
+          .call(d3.axisBottom(x).tickValues(hSym.map( (d) => d.x )).tickFormat((d)=>'').tickSize(-height))
+
+      svg.append("g")
+          .attr("class", "x-axis")
+          .attr("transform", "translate(0,0)")
+          .call(d3.axisTop(x).tickValues(hSym.map( (d) => d.x )).tickFormat((d)=>'').tickSize(-5))
+
+      // Add the y-axis.
+      svg.append("g")
+          .attr("class", "y-axis")
+          .attr("transform", "translate(" + 0 + ",0)")
+          .call(d3.axisLeft(y).ticks(7).tickSize(-5));//.
+
+      var tx = -7;
+      var ty = 10;
+      var tw = 50;
+      var th = 50;
+      // svg.selectAll('dot').data(data.filter(function(d) { return d.e >=emin && d.e <=emax ; }))
+      //   .enter().append('circle')
+      //   .attr('class','dots')
+      //   .attr('r',3)
+      //   .attr('cx', d => x(d.k))
+      //   .attr('cy', d => y(d.e))
+      //   .attr('fill','blue')
+
+      svg.selectAll("x-axis").data(hSym)
+        .enter().append("foreignObject")
+        .attr('class','xTicks')
         .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(x).tickValues(hSym.map( (d) => d.x )).tickFormat((d)=>'').tickSize(-height))
+        .attr("width", tw)
+        .attr("height", th)
+        .attr("x", (d)=>x(d.x)+tx)
+        .attr("y", ty)
+        // .style("color", 'red')
+        .html(function(d){ return d.T})
 
-    svg.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", "translate(0,0)")
-        .call(d3.axisTop(x).tickValues(hSym.map( (d) => d.x )).tickFormat((d)=>'').tickSize(-5))
+       svg.append('line')
+        .attr('class', 'zeroline')
+        .attr('x1', x(kmin))
+        .attr('y1', y(0))
+        .attr('x2', x(kmax))
+        .attr('y2', y(0))
+        .style("stroke-dasharray", ("3, 3"))
 
-    // Add the y-axis.
-    svg.append("g")
-        .attr("class", "y-axis")
-        .attr("transform", "translate(" + 0 + ",0)")
-        .call(d3.axisLeft(y).ticks(7).tickSize(-5));//.
-
-    var tx = -7;
-    var ty = 10;
-    var tw = 50;
-    var th = 50;
-    // svg.selectAll('dot').data(data.filter(function(d) { return d.e >=emin && d.e <=emax ; }))
-    //   .enter().append('circle')
-    //   .attr('class','dots')
-    //   .attr('r',3)
-    //   .attr('cx', d => x(d.k))
-    //   .attr('cy', d => y(d.e))
-    //   .attr('fill','blue')
-
-    svg.selectAll("x-axis").data(hSym)
-      .enter().append("foreignObject")
-      .attr('class','xTicks')
-      .attr("transform", "translate(0," + (height) + ")")
-      .attr("width", tw)
-      .attr("height", th)
-      .attr("x", (d)=>x(d.x)+tx)
-      .attr("y", ty)
-      // .style("color", 'red')
-      .html(function(d){ return d.T})
-
-     svg.append('line')
-      .attr('class', 'zeroline')
-      .attr('x1', x(kmin))
-      .attr('y1', y(0))
-      .attr('x2', x(kmax))
-      .attr('y2', y(0))
-      .style("stroke-dasharray", ("3, 3"))
-
-    svg.selectAll('line2')
-      .data([data]).enter().append("path")
-      .attr("class", "line")
-      .attr('stroke', 'green')
-      .attr("stroke-width", 3)
-      .attr("fill",'none')
-      .attr("d", line);
+      svg.selectAll('line2')
+        .data([data]).enter().append("path")
+        .attr("class", "line")
+        .attr('stroke', 'green')
+        .attr("stroke-width", 3)
+        .attr("fill",'none')
+        .attr("d", line);
   }
 
   // helper functions
