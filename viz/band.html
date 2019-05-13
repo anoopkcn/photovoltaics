@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!-- <link rel="stylesheet" href="../js/katex/katex.min.css"> -->
-<!-- <script src="../js/katex/katex.min.js"></script> -->
+<link rel="stylesheet" href="../js/katex/katex.min.css">
+<script src="../js/katex/katex.min.js"></script>
 <script src="../js/d3.v5.min.js"></script>
-<!-- <script src="../js/pumbaa.js"></script> -->
+<script src="../js/pumbaa.js"></script>
 <div id="dataviz-1"></div>
 <svg></svg>
 <style>
@@ -41,6 +41,14 @@
     var kmax = d3.max(data, d => d.k)
     var emax = 5
     var emin = -9
+    var hSym =[
+      {'x':0.00000,'T': '$\\Gamma$'.toTex()},
+      {'x':0.45562,'T': '$R$'.toTex()},
+      {'x':0.82763,'T': '$X$'.toTex()},
+      {'x':1.09068,'T': '$M$'.toTex()},
+      {'x':1.46269,'T': '$\\Gamma$'.toTex()},
+      {'x':1.72574,'T': '$X$'.toTex()}
+    ]
 
     x.domain([kmin,kmax])
     y.domain([emin,emax])
@@ -54,16 +62,25 @@
 
     // Add the x-axis.
     svg.append("g")
-        // .attr("class", "x-axis")
+        .attr("class", "x-axis")
         .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(x)); //.tickSize(-height)
+        .call(d3.axisBottom(x).tickValues(hSym.map( (d) => d.x )).tickFormat((d)=>'').tickSize(-height))
+
+    svg.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0,0)")
+        .call(d3.axisTop(x).tickValues(hSym.map( (d) => d.x )).tickFormat((d)=>'').tickSize(-5))
 
     // Add the y-axis.
     svg.append("g")
-        // .attr("class", "y-axis")
+        .attr("class", "y-axis")
         .attr("transform", "translate(" + 0 + ",0)")
-        .call(d3.axisLeft(y));//.tickSize(-width)
+        .call(d3.axisLeft(y).ticks(7).tickSize(-5));//.
 
+    var tx = -7;
+    var ty = 10;
+    var tw = 50;
+    var th = 50;
     svg.selectAll('dot').data(data.filter(function(d) { return d.e >=emin && d.e <=emax ; })) //.filter(function(d) { return d.e > -21; })
       .enter().append('circle')
       .attr('class','dots')
@@ -73,7 +90,25 @@
       // .attr('stroke','blue')
       .attr('fill','blue')
 
-    var highSymmetry = []
+    svg.selectAll("xaxis").data(hSym)
+      .enter().append("foreignObject")
+      .attr("transform", "translate(0," + (height) + ")")
+      .attr("width", tw)
+      .attr("height", th)
+      .attr("x", (d)=>x(d.x)+tx)
+      .attr("y", ty)
+      // .style("color", 'red')
+      .html(function(d){ return d.T})
+
+     svg.append('line')
+      .attr('x1', x(kmin))
+      .attr('y1', y(0))
+      .attr('x2', x(kmax))
+      .attr('y2', y(0))
+      .attr('stroke', 'blue')
+      .style("stroke-dasharray", ("3, 3"))
+      .attr('class', 'zeroline');
+
 
     // svg.append("path")
     //       .data([data])
