@@ -1,89 +1,29 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/slides/viz_styles.css">
 <link rel="stylesheet" href="../js/katex/katex.min.css">
 <script src="../js/katex/katex.min.js"></script>
 <script src="../js/d3.js"></script>
 <script src="../js/pumbaa.js"></script>
 <div id="dataviz"></div>
-<style>
-.axis {
-    shape-rendering: crispEdges;
-}
-
-.tooltip {
-    position: absolute;
-    text-align: center;
-    /* height: 28px;           */
-    font: 12px sans-serif;
-    border: 0px;
-    pointer-events: none;
-    font-size: 16px;
-}
-
-#tooltip-left {
-    color: #ffffff;
-    padding: 2px;
-    float: left;
-}
-
-#tooltip-right {
-    float: left;
-    padding: 2px;
-    color: #625F5D;
-    background: hsla(0, 0%, 100%, 0.525);
-    /* opacity: 0.5; */
-}
-
-.x-axis text,
-.y-axis text {
-    font-size: 20px;
-    fill: #625F5D;
-}
-
-.x-axis line,
-.y-axis line {
-    stroke: #625F5D;
-}
-
-.x-axis path,
-.y-axis path {
-    stroke: #BFBFBA;
-    stroke-width: 2px;
-}
-
-.tick line {
-    stroke: #BFBFBA;
-}
-
-.xTicks {
-    color: #625F5D;
-}
-
-.zeroline {
-    stroke: #BFBFBA;
-    stroke-width: 2px;
-}
-
-svg circle {
-    cursor: crosshair
-}
-</style>
 <script>
 /**
  * Initial setup
  * @type for canvas and svg area
  */
-var margin = { top: 60, right: 60, bottom: 60, left: 60 }
+var chart = document.getElementById("dataviz");
+console.log(chart.clientHeight)
+var margin = { top: 10, right: 60, bottom: 60, left: 60 };
 var settings = 0;
-var width = 1100 - settings - margin.left - margin.right;
-var height = 700 - margin.top - margin.bottom;
+var width = chart.clientWidth - settings - margin.left - margin.right;
+var height = chart.clientHeight - margin.top - margin.bottom;
 
 // Add an SVG element with the desired dimensions and margin.
 var svg = d3.select("#dataviz").append("svg")
     .attr("width", width + margin.left + margin.right + settings)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + (margin.top - 60) + ")")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 // scale, width and height of axis
 var x = d3.scaleLinear().range([0, width])
@@ -93,14 +33,13 @@ var y = d3.scaleLinear().range([height, 0])
  * setup for axis and ticks
  * @return {svg} 
  */
-var emin;
-var emax;
+var emin, emax, kmax, kmin;
 const draw = async function() {
     var MAPI = await d3.csv("band_test2.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
     var PI = await d3.csv("band_test.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
 
-    var kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
-    var kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
+    kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
+    kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
     emax = 5
     emin = -9
 
