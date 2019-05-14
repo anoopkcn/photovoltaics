@@ -2,7 +2,7 @@
   "name": "reveal.js",
   "version": "3.8.0",
   "description": "The HTML Presentation Framework",
-  "homepage": "http://revealjs.com",
+  "homepage": "https://github.com/anoopkcn/photovoltaics",
   "subdomain": "revealjs",
   "main": "js/reveal.js",
   "scripts": {
