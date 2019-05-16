@@ -1,27 +1,21 @@
-<!DOCTYPE html>
-<link rel="stylesheet" href="../css/reset.css">
-<link rel="stylesheet" href="../css/slides/viz_styles.css">
-<link rel="stylesheet" href="../css/slides/bands.css">
-<link rel="stylesheet" href="../js/katex/katex.min.css">
-<!-- <script src="../js/jquery-3.4.0.min.js"></script> -->
-<script src="../js/katex/katex.min.js"></script>
-<script src="../js/d3.js"></script>
-<script src="../js/pumbaa.js"></script>
-<div id="dataviz"></div>
-<script>
+// const d3 = require('./d3.js')
 /**
  * Initial setup
  * @type for canvas and svg area
  */
-var chart = document.getElementById("dataviz");
-// console.log(chart.clientHeight)
+console.log($('.dataviz').width())
 var margin = { top: 10, right: 60, bottom: 60, left: 60 };
 var settings = 0;
-var width = 1100 - settings - margin.left - margin.right;
-var height = 650 - margin.top - margin.bottom;
+var widthFull = 1100;
+var heightFull = 700;
+var width = widthFull - settings - margin.left - margin.right;
+var height = heightFull - margin.top - margin.bottom;
 
 // Add an SVG element with the desired dimensions and margin.
 var svg = d3.select("#dataviz").append("svg")
+    .attr('id', 'chart')
+    .attr("viewBox", `0 0 ${widthFull} ${heightFull}`)
+    .attr("preserveAspectRatio", "xMinYMin")
     .attr("width", width + margin.left + margin.right + settings)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -31,23 +25,23 @@ var svg = d3.select("#dataviz").append("svg")
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
 
-// var chart = $("#chart");
-// var aspect = chart.width() / chart.height();
-// var container = chart.parent();
+var chart = $("#chart");
+var aspect = chart.width() / chart.height();
+var container = chart.parent();
 
-// $(window).resize(function() {
-//     var targetWidth = container.width();
-//     chart.attr("width", targetWidth);
-//     chart.attr("height", Math.round(targetWidth / aspect));
-// });
+$(window).resize(function() {
+    var targetWidth = container.width();
+    chart.attr("width", targetWidth);
+    chart.attr("height", Math.round(targetWidth / aspect));
+});
 /**
  * setup for axis and ticks
  * @return {svg} 
  */
 var emin, emax, kmax, kmin;
 const draw = async function() {
-    var MAPI = await d3.csv("band_test2.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
-    var PI = await d3.csv("band_test.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
+    var MAPI = await d3.csv("viz/band_test2.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
+    var PI = await d3.csv("viz/band_test.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
 
     kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
     kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
@@ -107,7 +101,7 @@ const draw = async function() {
     styleMAPI = {
         'name': 'MAPI',
         'line': {
-            'color': '#a6cee3', 
+            'color': '#a6cee3',
             'width': 4,
             'opacity': 1,
         },
@@ -134,7 +128,7 @@ const draw = async function() {
     // add the y-axis at right of the page
     svg.append("g")
         .attr("class", "y-axis")
-        .attr("transform", "translate(" + (width) + ",0)" )
+        .attr("transform", "translate(" + (width) + ",0)")
         .call(d3.axisRight(y).ticks(7).tickSize(-5).tickFormat((d) => ''))
 }
 
@@ -148,7 +142,7 @@ function trace(data, style) {
 
     var line = d3.line().defined(function(d, i) {
         var next = 0
-        var dataSize=data.length
+        var dataSize = data.length
         if (i < dataSize - 1) {
             next = data[i + 1].k
             return d.k <= next && d.e >= emin && d.e <= emax;
@@ -230,4 +224,3 @@ var mouseleave = function(d) {
     Tooltip.style("opacity", 0)
     d3.select(this).attr('r', 2)
 }
-</script>
