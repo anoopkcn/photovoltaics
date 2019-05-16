@@ -31,15 +31,20 @@ var svg = d3.select("#dataviz").append("svg")
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
 
+
+/**
+ * jQuery window resize function doesnt work for iframes
+ */
 // var chart = $("#chart");
 // var aspect = chart.width() / chart.height();
 // var container = chart.parent();
-
+// 
 // $(window).resize(function() {
 //     var targetWidth = container.width();
 //     chart.attr("width", targetWidth);
 //     chart.attr("height", Math.round(targetWidth / aspect));
 // });
+
 /**
  * setup for axis and ticks
  * @return {svg} 
@@ -102,8 +107,6 @@ const draw = async function() {
         .attr('y2', y(0))
         .style("stroke-dasharray", ("3, 3"))
 
-    // trace( data, style )
-
     styleMAPI = {
         'name': 'MAPI',
         'line': {
@@ -146,7 +149,17 @@ function trace(data, style) {
     //     .domain(bandGroup).range(d3.schemePaired);
     //     console.log(bandColor(style.name))
 
+    /**
+     * make value filterd line
+     * @param  {key-val} d  k,e
+     * @param  {index} i index of the key-val pair
+     * @return {object}    line
+     */
     var line = d3.line().defined(function(d, i) {
+      /**
+       * remove link from end of band to begining of an other band
+       * @type {bool}
+       */
         var next = 0
         var dataSize=data.length
         if (i < dataSize - 1) {
@@ -155,6 +168,11 @@ function trace(data, style) {
         }
     });
 
+    /**
+     * define x and y values for line
+     * @param  {key-val} d key and value
+     * @return {object}   line
+     */
     line.x(d => x(d.k))
     line.y(d => y(d.e))
 
@@ -188,6 +206,14 @@ function trace(data, style) {
     }
 }
 
+/**
+ * create legend for the trace
+ * @param  {array} names  legend names
+ * @param  {array} colors legend colors
+ * @param  {array} x_pos  x-pos of the arrays
+ * @param  {array} ids    div id of the legend
+ * @return {svg}        svg object for legends
+ */
 function legend(names, colors, x_pos, ids) {
 
 }
