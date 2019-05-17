@@ -16,7 +16,7 @@
 var chart = document.getElementById("dataviz");
 // console.log(chart.clientHeight)
 var margin = { top: 10, right: 60, bottom: 60, left: 60 };
-var settings = 0;
+var settings = 100;
 var width = 1100 - settings - margin.left - margin.right;
 var height = 650 - margin.top - margin.bottom;
 
@@ -51,8 +51,9 @@ var y = d3.scaleLinear().range([height, 0])
  */
 var emin, emax, kmax, kmin;
 const draw = async function() {
-    var MAPI = await d3.csv("band_test2.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
-    var PI = await d3.csv("band_test.csv", type) //draw(MAPI, '#7EA34F', 'MAPI')
+    var MAPI = await d3.csv("band.csv", type) 
+    // console.log(MAPI.length)
+    var PI = await d3.csv("band_test.csv", type) 
 
     kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
     kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
@@ -139,6 +140,55 @@ const draw = async function() {
         .attr("class", "y-axis")
         .attr("transform", "translate(" + (width) + ",0)" )
         .call(d3.axisRight(y).ticks(7).tickSize(-5).tickFormat((d) => ''))
+
+    // add legend
+    labelMarker1(width+20,margin.top, 10, stylePI.line.color,stylePI.line.opacity,)
+    labelMarker2(width+10,margin.top+40,20,20,styleMAPI.line.color,styleMAPI.line.opacity)
+    label('PI',width+40, margin.top+5,stylePI.line.color,stylePI.line.opacity,'PbI3-')
+    label('MAPI',width+40, margin.top+40+20,styleMAPI.line.color,styleMAPI.line.opacity,'CH3NH3PbI3')
+
+    function labelMarker1(cx,cy,r,color,opacity){
+      svg.append("circle")
+      .attr("r", r)
+      .attr("cx", cx)
+      .attr("cy", cy)
+      .attr("fill", color)
+      .attr("opacity", opacity)
+    }
+
+    function label(cls,x,y,color,opacity,text){
+      svg.append("text")
+      .attr("class",cls)
+      .attr("x", x)
+      .attr("y", y)
+      .attr("fill", color)
+      .attr("opacity", opacity)
+      .text(text)
+    }
+
+    // add legend
+    function labelMarker2(x,y,width,height,color,opacity){
+      svg.append("rect")
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", color)
+      .attr('opacity',opacity)
+    }
+
+
+     //labels
+  // svg.selectAll("legend")
+  //   .append("text")
+  //   .attr("width", 150)
+  //   .attr("height", 20)
+  //   .attr("x", 30)
+  //   .attr("y", 30)
+  //   .style("color", 'blue')
+  //   // .style("font", "14px 'Helvetica Neue'")
+  //   .text("hello")
+
 }
 
 draw()
@@ -179,8 +229,7 @@ function trace(data, style) {
     if (style.line) {
         svg.selectAll('band')
             .data([data]).enter().append("path")
-            .attr("class", "line")
-            .attr('id', style.name)
+            .attr('class', style.name)
             .attr('stroke', style.line.color) //d => bandColor(style.name)
             .attr("stroke-width", style.line.width)
             .attr("opacity", style.line.opacity)
@@ -193,8 +242,7 @@ function trace(data, style) {
                 return d.e >= emin && d.e <= emax
             }))
             .enter().append('circle')
-            .attr('class', 'dots')
-            .attr('id', style.name)
+            .attr('class', style.name)
             // .on("mouseover", mouseover)
             // .on("mousemove", mousemove)
             // .on("mouseleave", mouseleave)
