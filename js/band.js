@@ -40,10 +40,7 @@ $(window).resize(function() {
 var emin, emax, kmax, kmin;
 
 const draw = async function() {
-    var MAPI = await d3.csv("viz/band_MAPI.csv", type)
-    // console.log(MAPI)
-
-
+    var MAPI = await d3.csv("viz/band.csv", type)
     var PI = await d3.csv("viz/band_test.csv", type)
 
     kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
@@ -97,7 +94,7 @@ const draw = async function() {
         .attr('y1', y(0))
         .attr('x2', x(kmax))
         .attr('y2', y(0))
-        .style("stroke-dasharray", ("3, 3"))
+        .style("stroke-dasharray", ("6, 1"))
 
     // trace( data, style )
 
@@ -111,8 +108,9 @@ const draw = async function() {
         'orbital': {
             'atomIndex': [3, 4, 5, 11, 12],
             'atomType': ['C', 'N', 'H', 'Pb', 'I'],
+            'atomColor': ['#984EA4','#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
             'mode': 'dot',
-            'opacity':0.7
+            'opacity':0
             // 'mode': 'line' //TODO
         },
         'marker': {
@@ -199,7 +197,7 @@ function trace(data, style) {
         for (let iatom of style.orbital.atomIndex) {
             atoms.push(data.columns[iatom])
         }
-        var atomColor = d3.scaleOrdinal().domain(atoms).range(d3.schemeSet1);
+        var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
         // console.log(atoms)
         for (let Z of atoms) {
             svg.selectAll('dot').data(data.filter(function(d, i) {
@@ -207,6 +205,7 @@ function trace(data, style) {
                 }))
                 .enter().append('circle')
                 .attr('class', `atom-${Z}`)
+                .attr('id','orbital')
                 // .on("mouseover", mouseover)
                 // .on("mousemove", mousemove)
                 // .on("mouseleave", mouseleave)
@@ -215,7 +214,6 @@ function trace(data, style) {
                 .attr('cy', d => y(d.e))
                 .attr('fill', atomColor(`${Z}`))
                 .attr("opacity", style.orbital.opacity);
-                console.log(`.atom-${Z}`)
         }
         subLabelMarker(atoms, style.legend.x, style.legend.y + 40, style.legend.width)
     }
@@ -273,19 +271,24 @@ function trace(data, style) {
             .style('text-align', 'left')
             .style('cursor', 'pointer')
             .html(labeltext)
-        // .on("click",function(d){
-
-        // })
+            .on("click",function(d){
+                if (style.orbital) {
+                    currentOpacity = d3.selectAll("#orbital").style("opacity")
+                    d3.selectAll("#orbital").transition().style("opacity", currentOpacity == 0.7 ? 0 : 0.7)
+                }
+            })
 
     }
 
     // if (style.orbital) {  }
+    // console.log(colors('1f77b4ff7f0e'))
 
     function subLabelMarker(atoms, x, y, r) {
         let j=0
         for (let i of atoms) {
             svg.append("rect")
                 .attr('class', `slm-${i}`)
+                .attr('id','orbital')
                 .attr("x", (x + j * 50))
                 .attr("y", y)
                 .attr("width", (r / 1.5))
@@ -296,15 +299,16 @@ function trace(data, style) {
                 .on("click", function(d) {
                     currentOpacity = d3.selectAll(`.atom-${i}`).style("opacity")
                     console.log(`.atom-${i}`)
-                    d3.selectAll(`.atom-${i}`).transition().style("opacity", currentOpacity == style.orbital.opacity ? 0 : style.orbital.opacity)
+                    d3.selectAll(`.atom-${i}`).transition().style("opacity", currentOpacity == 0.7 ? 0 : 0.7)
 
                     labelMarkerOpacity = d3.selectAll(`.slm-${i}`).style("opacity")
-                    d3.selectAll(`.slm-${i}`).transition().style("opacity", labelMarkerOpacity == style.orbital.opacity ? 0.2 : style.orbital.opacity)
+                    d3.selectAll(`.slm-${i}`).transition().style("opacity", labelMarkerOpacity == 0.7 ? 0.2 : 0.7)
 
                 })
             // console.log(i)
             svg.append("foreignObject")
                 .attr("class", `slm-${i}`)
+                .attr('id','orbital')
                 .attr("width", 40)
                 .attr("height", 30)
                 .attr("x", (x+20 + j * 50))
@@ -328,6 +332,13 @@ function type(d) {
     // d.Z11 = +d.Z11;
     return d;
 }
+
+// function colors(specifier) {
+//   var n = specifier.length / 6 | 0, colors = new Array(n), i = 0;
+//   while (i < n) colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
+//   return colors;
+// }
+
 var f = d3.format(".2f")
 // create a tooltip
 var Tooltip = d3.select("#dataviz")
