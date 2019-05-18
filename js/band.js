@@ -4,7 +4,7 @@
  * @type for canvas and svg area
  */
 var margin = { top: 10, right: 60, bottom: 60, left: 60 };
-var settings = 100;
+var settings = 200;
 var widthFull = 1100;
 var heightFull = 650;
 var width = widthFull - settings - margin.left - margin.right;
@@ -109,9 +109,10 @@ const draw = async function() {
             'opacity': 0,
         },
         'orbital': {
-            'columns': [3, 14],
-            'atomType':['C','N','H','Pb','I'],
+            'atomIndex': [3, 4, 5, 11, 12],
+            'atomType': ['C', 'N', 'H', 'Pb', 'I'],
             'mode': 'dot',
+            'opacity':0.7
             // 'mode': 'line' //TODO
         },
         'marker': {
@@ -192,32 +193,31 @@ function trace(data, style) {
             .attr("d", line);
     }
 
-    var atomColor = d3.scaleOrdinal()
-        .domain(data.columns.slice(3))
-        .range(d3.schemeCategory10);
-
+    
     if (style.orbital) {
-        // console.log(data.columns.slice(3,14))
-        a=style.orbital.columns[0]
-        b=style.orbital.columns[1]
-        for (let Z of data.columns.slice(a, b)) {
-            // var Z = 'Z9'
+        atoms = []
+        for (let iatom of style.orbital.atomIndex) {
+            atoms.push(data.columns[iatom])
+        }
+        var atomColor = d3.scaleOrdinal().domain(atoms).range(d3.schemeSet1);
+        // console.log(atoms)
+        for (let Z of atoms) {
             svg.selectAll('dot').data(data.filter(function(d, i) {
                     return d.e >= emin && d.e <= emax
                 }))
                 .enter().append('circle')
-                .attr('class', 'dots')
-                .attr('id', style.name)
+                .attr('class', `atom-${Z}`)
                 // .on("mouseover", mouseover)
                 // .on("mousemove", mousemove)
                 // .on("mouseleave", mouseleave)
-                .attr('r', d => { if (d[`${Z}`] > 0.001) { return d[`${Z}`] * 10 } else { return 0 } })
-                // .attr('r',1)
-                .attr('cx', d => x(d[`k`]))
+                .attr('r', d => { if (d[`${Z}`] > 0.001) { return d[`${Z}`] * 8 } else { return 0 } })
+                .attr('cx', d => x(d.k))
                 .attr('cy', d => y(d.e))
                 .attr('fill', atomColor(`${Z}`))
-                .attr("opacity", 0.5)
+                .attr("opacity", style.orbital.opacity);
+                console.log(`.atom-${Z}`)
         }
+        subLabelMarker(atoms, style.legend.x, style.legend.y + 40, style.legend.width)
     }
 
     // add legend
@@ -235,17 +235,15 @@ function trace(data, style) {
                 .attr("y", y)
                 .attr("width", r)
                 .attr("height", r)
-                .attr('stroke', '#625F5D')
-                .attr('stroke-width', 1)
                 .attr("fill", style.line.color)
-                .attr('opacity', d=>style.line.opacity == 0 ? 0.2 : style.line.opacity )
+                .attr('opacity', d => style.line.opacity == 0 ? 0.2 : style.line.opacity)
                 .style('cursor', 'pointer')
                 .on("click", function(d) {
                     currentOpacity = d3.selectAll("." + style.name).style("opacity")
                     d3.selectAll("." + style.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
 
                     labelMarkerOpacity = d3.selectAll(`.lm-${style.name}`).style("opacity")
-                    d3.selectAll(`.lm-${style.name}`).transition().style("opacity", labelMarkerOpacity == 1 ? 0.5 : 1)
+                    d3.selectAll(`.lm-${style.name}`).transition().style("opacity", labelMarkerOpacity == 1 ? 0.2 : 1)
 
                 })
         } else if (marker = 'dot') {
@@ -254,8 +252,6 @@ function trace(data, style) {
                 .attr("r", (r / 2))
                 .attr("cx", x)
                 .attr("cy", y)
-                .attr('stroke', '#625F5D')
-                .attr('stroke-width', 1)
                 .attr("fill", style.line.color)
                 .attr('opacity', style.line.opacity)
                 .style('cursor', 'pointer')
@@ -266,7 +262,7 @@ function trace(data, style) {
     // label text
     function label(x, y, labeltext) {
         svg.append("foreignObject")
-            .attr("class",`lm-${style.name}`)
+            .attr("class", `lm-${style.name}`)
             .attr("width", 150)
             .attr("height", 30)
             .attr("x", x)
@@ -277,26 +273,51 @@ function trace(data, style) {
             .style('text-align', 'left')
             .style('cursor', 'pointer')
             .html(labeltext)
-            // .on("click",function(d){
+        // .on("click",function(d){
 
-            // })
+        // })
 
     }
 
-    if(style.orbital){ subLabelMarker(style.legend.x, style.legend.y+40, style.legend.width)}
+    // if (style.orbital) {  }
 
-    function subLabelMarker(x, y, r){
-        for(i=0;i<style.orbital.atomType.length-1;i++){
-        svg.append("rect")
-                .attr('class', `atom-${style.name}`)
-                .attr("x", (x+i*40))
+    function subLabelMarker(atoms, x, y, r) {
+        let j=0
+        for (let i of atoms) {
+            svg.append("rect")
+                .attr('class', `slm-${i}`)
+                .attr("x", (x + j * 50))
                 .attr("y", y)
-                .attr("width", (r/1.5))
-                .attr("height", (r/1.5))
-                .attr("fill", 'black')
-                .attr('opacity', 1 )
+                .attr("width", (r / 1.5))
+                .attr("height", (r / 1.5))
+                .attr("fill", atomColor(`${i}`))
+                .attr('opacity', style.orbital.opacity)
                 .style('cursor', 'pointer')
-            }
+                .on("click", function(d) {
+                    currentOpacity = d3.selectAll(`.atom-${i}`).style("opacity")
+                    console.log(`.atom-${i}`)
+                    d3.selectAll(`.atom-${i}`).transition().style("opacity", currentOpacity == style.orbital.opacity ? 0 : style.orbital.opacity)
+
+                    labelMarkerOpacity = d3.selectAll(`.slm-${i}`).style("opacity")
+                    d3.selectAll(`.slm-${i}`).transition().style("opacity", labelMarkerOpacity == style.orbital.opacity ? 0.2 : style.orbital.opacity)
+
+                })
+            // console.log(i)
+            svg.append("foreignObject")
+                .attr("class", `slm-${i}`)
+                .attr("width", 40)
+                .attr("height", 30)
+                .attr("x", (x+20 + j * 50))
+                .attr("y", y-2)
+                .style("color", atomColor(i))
+                .style("opacity", style.orbital.opacity)
+                .style('font-size', '16px')
+                .style('text-align', 'left')
+                .style('cursor', 'pointer')
+                .html(style.orbital.atomType[j]);
+
+                j=j+1
+        }
     }
 }
 
