@@ -1,41 +1,42 @@
-// const d3 = require('./d3.js')
-/**
- * Initial setup
- * @type for canvas and svg area
- */
-var margin = { top: 60, right: 60, bottom: 60, left: 60 };
-var widthInfo = 200;
-var widthFull = 1100;
-var heightFull = 650;
-var width = widthFull - widthInfo - margin.left - margin.right;
-var height = heightFull - margin.top - margin.bottom;
+class Draw {
+    constructor(canvas) {
+        this.margin = (canvas.margin) ? canvas.margin : { top: 60, right: 60, bottom: 60, left: 60 }
+        this.canvasId = (canvas.name) ? `#${canvas.name}` : '#dataviz'
+        this.width = (canvas.width) ? (canvas.width - this.margin.left - this.margin.right) : (600 - this.margin.left - this.margin.right)
+        this.height = (canvas.height) ? (canvas.height - this.margin.top - this.margin.bottom) : (600 - this.margin.top - this.margin.bottom)
+        this.viewWidth = (canvas.view.width) ? (canvas.view.width) : this.width
+        this.viewHeight = (canvas.view.height) ? (canvas.view.height) : this.height
+    }
+    plot(){
+        this.svg = d3.select(this.canvasId).append("svg")
+        .attr('id', 'canvas')
+        .attr("viewBox", `0 0 ${this.viewWidth} ${this.viewHeight}`)
+        .attr("preserveAspectRatio", "xMinYMin")
+        .attr("width", this.viewWidth)
+        .attr("height", this.viewHeight)
+        .append("g")
+        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+        return this.svg
+    }
+}
 
-// Add an SVG element with the desired dimensions and margin.
-var svg = d3.select("#dataviz").append("svg")
-    .attr('id', 'chart')
-    .attr("viewBox", `0 0 ${widthFull} ${heightFull}`)
-    .attr("preserveAspectRatio", "xMinYMin")
-    .attr("width", width + margin.left + margin.right + widthInfo)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+var canvas = {
+    'name': 'dataviz',
+    'view': { 'width': 1100, 'height': 650 },
+    'width': 900,
+    'height': 650,
+    'margin': { 'top': 10, 'right': 60, 'bottom': 60, 'left': 60 },
+    'resize': true
+}
+
+resize("#canvas")
+pumbaa = new Draw(canvas)
+svg = pumbaa.plot()
 
 // scale, width and height of axis
-var x = d3.scaleLinear().range([0, width])
-var y = d3.scaleLinear().range([height, 0])
-
-
-/**
- * adapt graph according to the window resize
- * @type {jQuery auto load function}
- */
-$(window).resize(function() {
-    var chart = $("#chart")
-    var targetWidth = chart.parent().width();
-    var aspect = chart.width() / chart.height();
-    chart.attr("width", targetWidth);
-    chart.attr("height", Math.round(targetWidth / aspect));
-});
+var x = d3.scaleLinear().range([0, pumbaa.width])
+var y = d3.scaleLinear().range([pumbaa.height, 0])
 
 /**
  * setup for axis and ticks
@@ -67,8 +68,8 @@ const draw = async function() {
     // Add the x-axis at bottom of the page
     svg.append("g")
         .attr("class", "x-axis")
-        .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-height))
+        .attr("transform", "translate(0," + (pumbaa.height) + ")")
+        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-pumbaa.height))
 
     // Add the y-axis.
     svg.append("g")
@@ -85,7 +86,7 @@ const draw = async function() {
         .call(x)
         .selectAll("g").data(hSym).enter().append("foreignObject")
         .attr('class', 'xTicks')
-        .attr("transform", "translate(0," + (height) + ")")
+        .attr("transform", "translate(0," + (pumbaa.height) + ")")
         .attr("width", tw)
         .attr("height", th)
         .attr("x", (d) => x(d.x) + tx)
@@ -119,8 +120,8 @@ const draw = async function() {
         'legend': {
             'name': '$CH_3NH_3PbI_3$'.toTex(),
             'marker': 'rect',
-            'x': width + 10,
-            'y': margin.top + 40,
+            'x': pumbaa.width + 10,
+            'y': pumbaa.margin.top + 40,
             'width': 20,
         },
         // 'orbital': {
@@ -143,8 +144,8 @@ const draw = async function() {
         'legend': {
             'name': '$PbI_3^-$'.toTex(),
             'marker': 'rect',
-            'x': width + 10,
-            'y': margin.top,
+            'x': pumbaa.width + 10,
+            'y': pumbaa.margin.top,
             'width': 20,
         }
     }
@@ -161,7 +162,7 @@ const draw = async function() {
     // add the y-axis at right of the page
     svg.append("g")
         .attr("class", "y-axis")
-        .attr("transform", "translate(" + (width) + ",0)")
+        .attr("transform", "translate(" + (pumbaa.width) + ",0)")
         .call(d3.axisRight(y).ticks(7).tickSize(-5).tickFormat((d) => ''))
 
 
@@ -209,27 +210,27 @@ function trace(data, style) {
             }
             var lColor = d3.scaleOrdinal().domain(lCharge).range(style.dos.color);
             // console.log(dosdata.columns.slice(17))
-            var xDos = d3.scaleLinear().range([0, widthInfo]) //energy
-            var yDos = d3.scaleLinear().range([height, 0]) //pdos
+            var xDos = d3.scaleLinear().range([0, (pumbaa.viewWidth - pumbaa.width - pumbaa.margin.left - pumbaa.margin.right)]) //energy
+            var yDos = d3.scaleLinear().range([pumbaa.height, 0]) //pdos
             xDos.domain([0, d3.max(dosdata, d => d.tDOS)])
             yDos.domain([emin, emax])
             // Add the x-axis at left of widthinfo
             svg.append("g")
                 .attr("class", "x-axis")
-                .attr("transform", "translate(" + (width + widthInfo) + ",0)")
+                .attr("transform", "translate(" + (pumbaa.viewWidth - pumbaa.margin.right - pumbaa.margin.left) + ",0)")
                 .call(d3.axisRight(yDos).ticks(7).tickSize(-5).tickFormat((d) => ''));
 
 
             // Add the y-axis.
             svg.append("g")
                 .attr("class", "y-axis")
-                .attr("transform", "translate(" + width + "," + height + ")")
+                .attr("transform", "translate(" + pumbaa.width + "," + pumbaa.height + ")")
                 .call(d3.axisBottom(xDos).tickFormat((d) => '').tickSize(0))
 
             // add the x-axis at top of the page
             svg.append("g")
                 .attr("class", "x-axis")
-                .attr("transform", "translate(" + width + ",-1)")
+                .attr("transform", "translate(" + pumbaa.width + ",-1)")
                 .call(d3.axisTop(xDos).tickFormat((d) => '').tickSize(0))
 
             for (let Z of lCharge) {
@@ -244,7 +245,7 @@ function trace(data, style) {
                 if (`${Z}` == 'tDOS') {
                     svg.selectAll('tdos')
                         .data([dosdata]).enter().append("path")
-                        .attr("transform", "translate(" + width + ",0)")
+                        .attr("transform", "translate(" + pumbaa.width + ",0)")
                         .attr('class', 'tdos')
                         .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
                         .attr("stroke-width", (style.line.width / 2))
@@ -254,19 +255,16 @@ function trace(data, style) {
                 } else {
                     svg.selectAll('dos')
                         .data([dosdata]).enter().append("path")
-                        .attr("transform", "translate(" + width + ",0)")
+                        .attr("transform", "translate(" + pumbaa.width + ",0)")
                         .attr('class', 'dos')
                         .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
                         .attr("stroke-width", (style.line.width / 2))
-                        .style("stroke-dasharray", (d=>{return `${Z}`=='inter' ? ("1, 1") : 'none'}))
+                        .style("stroke-dasharray", (d => { return `${Z}` == 'inter' ? ("1, 1") : 'none' }))
                         .attr("opacity", 1)
                         .attr("fill", 'none')
                         .attr("d", dosline);
                 }
             }
-
-
-            console.log('dos is true')
         }
 
     }

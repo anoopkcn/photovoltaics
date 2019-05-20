@@ -23,3 +23,17 @@ String.prototype.toTex = function() {
     return this;
   }
 };
+
+/**
+ * adapt graph according to the window resize
+ * @type {jQuery auto load function}
+ */
+function resize(id){
+    $(window).resize(function() {
+        var chart = $(id)
+        var targetWidth = chart.parent().width();
+        var aspect = chart.width() / chart.height();
+        chart.attr("width", targetWidth);
+        chart.attr("height", Math.round(targetWidth / aspect));
+    });
+}
