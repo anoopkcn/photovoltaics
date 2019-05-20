@@ -24,15 +24,19 @@ var svg = d3.select("#dataviz").append("svg")
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
 
-var chart = $("#chart");
-var aspect = chart.width() / chart.height();
-var container = chart.parent();
 
+/**
+ * adapt graph according to the window resize
+ * @type {jQuery auto load function}
+ */
 $(window).resize(function() {
-    var targetWidth = container.width();
+    var chart = $("#chart")
+    var targetWidth = chart.parent().width();
+    var aspect = chart.width() / chart.height();
     chart.attr("width", targetWidth);
     chart.attr("height", Math.round(targetWidth / aspect));
 });
+
 /**
  * setup for axis and ticks
  * @return {svg} 
@@ -49,12 +53,12 @@ const draw = async function() {
     emin = -9
 
     var hSym = [
-        { 'x': 0.00000, 'T': '$\\Gamma$'.toTex() },
-        { 'x': 0.45562, 'T': '$R$'.toTex() },
-        { 'x': 0.82763, 'T': '$X$'.toTex() },
-        { 'x': 1.09068, 'T': '$M$'.toTex() },
-        { 'x': 1.46269, 'T': '$\\Gamma$'.toTex() },
-        { 'x': 1.72574, 'T': '$X$'.toTex() }
+        { 'x': 0.00000, 'label': '$\\Gamma$'.toTex() },
+        { 'x': 0.45562, 'label': '$R$'.toTex() },
+        { 'x': 0.82763, 'label': '$X$'.toTex() },
+        { 'x': 1.09068, 'label': '$M$'.toTex() },
+        { 'x': 1.46269, 'label': '$\\Gamma$'.toTex() },
+        { 'x': 1.72574, 'label': '$X$'.toTex() }
     ]
 
     x.domain([kmin, kmax])
@@ -86,7 +90,7 @@ const draw = async function() {
         .attr("height", th)
         .attr("x", (d) => x(d.x) + tx)
         .attr("y", ty)
-        .html(function(d) { return d.T })
+        .html(function(d) { return d.label })
 
     svg.append('line')
         .attr('class', 'zeroline')
