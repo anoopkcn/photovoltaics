@@ -4,10 +4,10 @@
  * @type for canvas and svg area
  */
 var margin = { top: 10, right: 60, bottom: 60, left: 60 };
-var settings = 200;
+var widthInfo = 200;
 var widthFull = 1100;
 var heightFull = 650;
-var width = widthFull - settings - margin.left - margin.right;
+var width = widthFull - widthInfo - margin.left - margin.right;
 var height = heightFull - margin.top - margin.bottom;
 
 // Add an SVG element with the desired dimensions and margin.
@@ -15,7 +15,7 @@ var svg = d3.select("#dataviz").append("svg")
     .attr('id', 'chart')
     .attr("viewBox", `0 0 ${widthFull} ${heightFull}`)
     .attr("preserveAspectRatio", "xMinYMin")
-    .attr("width", width + margin.left + margin.right + settings)
+    .attr("width", width + margin.left + margin.right + widthInfo)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -105,16 +105,12 @@ const draw = async function() {
             'width': 4,
             'opacity': 0,
         },
-        'orbital': {
-            'atomIndex': [3, 4, 5, 11, 12],
-            'atomType': ['C', 'N', 'H', 'Pb', 'I'],
-            'atomColor': ['#984EA4','#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-            'mode': 'dot',
-            'opacity':0
-            // 'mode': 'line' //TODO
-        },
         'marker': {
             'color': 'red'
+        },
+        'dos': {
+            'cols': [1, 2, 5, 6, 7, 12, 13],
+            'color': ['#cccccc', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
         },
         'legend': {
             'name': '$CH_3NH_3PbI_3$'.toTex(),
@@ -122,7 +118,15 @@ const draw = async function() {
             'x': width + 10,
             'y': margin.top + 40,
             'width': 20,
-        }
+        },
+        // 'orbital': {
+        //     'atomIndex': [3, 4, 8, 11, 12],
+        //     'atomType': ['C', 'N', 'H', 'Pb', 'I'],
+        //     'atomColor': ['#984EA4','#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+        //     'mode': 'dot',
+        //     'opacity':0
+        //     // 'mode': 'line' //TODO
+        // },
     }
 
     stylePI = {
@@ -191,7 +195,78 @@ function trace(data, style) {
             .attr("d", line);
     }
 
-    
+    if (style.dos) {
+        d3.csv("viz/dos.csv", type_dos).then(function(dosdata) { dos(dosdata); })
+
+        function dos(dosdata) {
+            lCharge = []
+            for (let il of style.dos.cols) {
+                lCharge.push(dosdata.columns[il])
+            }
+            var lColor = d3.scaleOrdinal().domain(lCharge).range(style.dos.color);
+            // console.log(dosdata.columns.slice(17))
+            var xDos = d3.scaleLinear().range([0, widthInfo]) //energy
+            var yDos = d3.scaleLinear().range([height, 0]) //pdos
+            xDos.domain([0, d3.max(dosdata, d => d.tDOS)])
+            yDos.domain([emin, emax])
+            // Add the x-axis at left of widthinfo
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", "translate(" + (width + widthInfo) + ",0)")
+                .call(d3.axisRight(yDos).ticks(7).tickSize(-5).tickFormat((d) => ''));
+
+
+            // Add the y-axis.
+            svg.append("g")
+                .attr("class", "y-axis")
+                .attr("transform", "translate(" + width + "," + height + ")")
+                .call(d3.axisBottom(xDos).tickFormat((d) => '').tickSize(0))
+
+            // add the x-axis at top of the page
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", "translate(" + width + ",-1)")
+                .call(d3.axisTop(xDos).tickFormat((d) => '').tickSize(0))
+
+            for (let Z of lCharge) {
+                var dosline = d3.line().defined(function(d) { return d.e >= emin && d.e <= emax })
+                    .x(d => xDos(d[`${Z}`]))
+                    .y(d => yDos(d.e));
+                var dosarea = d3.area().defined(function(d) { return d.e >= emin && d.e <= emax })
+                    .x(d => xDos(d[`${Z}`]))
+                    .y1(d => yDos(d.e))
+                // .y0(widthInfo)
+
+                if (`${Z}` == 'tDOS') {
+                    svg.selectAll('tdos')
+                        .data([dosdata]).enter().append("path")
+                        .attr("transform", "translate(" + width + ",0)")
+                        .attr('class', 'tdos')
+                        .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
+                        .attr("stroke-width", (style.line.width / 2))
+                        .attr("opacity", 0.5)
+                        .attr("fill", lColor(`${Z}`))
+                        .attr("d", dosarea);
+                } else {
+                    svg.selectAll('dos')
+                        .data([dosdata]).enter().append("path")
+                        .attr("transform", "translate(" + width + ",0)")
+                        .attr('class', 'dos')
+                        .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
+                        .attr("stroke-width", (style.line.width / 2))
+                        .style("stroke-dasharray", (d=>{return `${Z}`=='inter' ? ("1, 1") : 'none'}))
+                        .attr("opacity", 1)
+                        .attr("fill", 'none')
+                        .attr("d", dosline);
+                }
+            }
+
+
+            console.log('dos is true')
+        }
+
+    }
+
     if (style.orbital) {
         atoms = []
         for (let iatom of style.orbital.atomIndex) {
@@ -205,7 +280,7 @@ function trace(data, style) {
                 }))
                 .enter().append('circle')
                 .attr('class', `atom-${Z}`)
-                .attr('id','orbital')
+                .attr('id', 'orbital')
                 // .on("mouseover", mouseover)
                 // .on("mousemove", mousemove)
                 // .on("mouseleave", mouseleave)
@@ -271,7 +346,7 @@ function trace(data, style) {
             .style('text-align', 'left')
             .style('cursor', 'pointer')
             .html(labeltext)
-            .on("click",function(d){
+            .on("click", function(d) {
                 if (style.orbital) {
                     currentOpacity = d3.selectAll("#orbital").style("opacity")
                     d3.selectAll("#orbital").transition().style("opacity", currentOpacity == 0.7 ? 0 : 0.7)
@@ -284,12 +359,12 @@ function trace(data, style) {
     // console.log(colors('1f77b4ff7f0e'))
 
     function subLabelMarker(atoms, x, y, r) {
-        let j=0
+        let j = 0
         for (let i of atoms) {
             svg.append("rect")
                 .attr('class', `slm-${i}`)
-                .attr('id','orbital')
-                .attr("x", (x + j * 50))
+                .attr('id', 'orbital')
+                .attr("x", (x + j * 40))
                 .attr("y", y)
                 .attr("width", (r / 1.5))
                 .attr("height", (r / 1.5))
@@ -308,11 +383,11 @@ function trace(data, style) {
             // console.log(i)
             svg.append("foreignObject")
                 .attr("class", `slm-${i}`)
-                .attr('id','orbital')
+                .attr('id', 'orbital')
                 .attr("width", 40)
                 .attr("height", 30)
-                .attr("x", (x+20 + j * 50))
-                .attr("y", y-2)
+                .attr("x", (x + 15 + j * 40))
+                .attr("y", y - 2)
                 .style("color", atomColor(i))
                 .style("opacity", style.orbital.opacity)
                 .style('font-size', '16px')
@@ -320,10 +395,13 @@ function trace(data, style) {
                 .style('cursor', 'pointer')
                 .html(style.orbital.atomType[j]);
 
-                j=j+1
+            j = j + 1
         }
     }
 }
+
+
+
 
 // helper functions
 function type(d) {
@@ -333,13 +411,18 @@ function type(d) {
     return d;
 }
 
+function type_dos(d) {
+    d.e = +d.e;
+    d.tDOS = +d.tDOS;
+    return d;
+}
 // function colors(specifier) {
 //   var n = specifier.length / 6 | 0, colors = new Array(n), i = 0;
 //   while (i < n) colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
 //   return colors;
 // }
 
-var f = d3.format(".2f")
+var fmt = (a) => d3.format(a)
 // create a tooltip
 var Tooltip = d3.select("#dataviz")
     .append("div")
@@ -359,7 +442,7 @@ var mousemove = function(d) {
     Tooltip.attr("alignment-baseline", "middle")
         .html(
             `<div id='tooltip-left' style="background:${bgColor}">` +
-            f(d.e) +
+            fmt(".2f")(d.e) +
             `</div><div id='tooltip-right' style="color:${bgColor}">` +
             symbol + `</div>`
         )
