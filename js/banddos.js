@@ -7,16 +7,36 @@ class Draw {
         this.viewWidth = (canvas.view.width) ? (canvas.view.width) : this.width
         this.viewHeight = (canvas.view.height) ? (canvas.view.height) : this.height
     }
-    plot(){
+    plot(description) {
         this.svg = d3.select(this.canvasId).append("svg")
-        .attr('id', 'canvas')
-        .attr("viewBox", `0 0 ${this.viewWidth} ${this.viewHeight}`)
-        .attr("preserveAspectRatio", "xMinYMin")
-        .attr("width", this.viewWidth)
-        .attr("height", this.viewHeight)
-        .append("g")
-        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+            .attr('id', 'canvas')
+            .attr("viewBox", `0 0 ${this.viewWidth} ${this.viewHeight}`)
+            .attr("preserveAspectRatio", "xMinYMin")
+            .attr("width", this.viewWidth)
+            .attr("height", this.viewHeight)
+            .append("g")
+            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+        // var ifData = this.setData(description)
+        // ifData.then(function(value) {
+
+        //     console.log(value[0])
+        // })
+        // console.log(ifData)
         return this.svg
+
+    }
+    x(){
+        return  d3.scaleLinear().range([0, this.width])
+    }
+    y(){
+        return d3.scaleLinear().range([this.height, 0])
+    }
+    async setData(description) {
+        var data = new Array()
+        for (let file of description.file) {
+            data.push(await d3.csv(file, type))
+        }
+        return data
     }
 }
 
@@ -26,27 +46,39 @@ var canvas = {
     'view': { 'width': 1100, 'height': 650 },
     'width': 900,
     'height': 650,
-    'margin': { 'top': 10, 'right': 60, 'bottom': 60, 'left': 60 },
+    'margin': { 'top': 60, 'right': 60, 'bottom': 60, 'left': 60 },
     'resize': true
 }
 
+var data = {
+    'file': ['viz/band.csv', 'viz/band_test.csv'],
+    'scale': 'linear',
+    // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
+    'domain': { 'y': [-9, 5] }
+}
+
+// var style={
+
+// }
+
 resize("#canvas")
 pumbaa = new Draw(canvas)
-svg = pumbaa.plot()
+svg = pumbaa.plot(data)
+// dat = pumbaa.setData(data)
+// dat.then(function(val){
+//     console.log(val.length)
+// })
 
-// scale, width and height of axis
-var x = d3.scaleLinear().range([0, pumbaa.width])
-var y = d3.scaleLinear().range([pumbaa.height, 0])
+var x = pumbaa.x()
+var y = pumbaa.y()
 
 /**
  * setup for axis and ticks
  * @return {svg} 
  */
-var emin, emax, kmax, kmin;
-
 const draw = async function() {
     var MAPI = await d3.csv("viz/band.csv", type)
-    var PI = await d3.csv("viz/band_test.csv", type)
+    var PI = await d3.csv("viz/band_PI.csv", type)
 
     kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
     kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
@@ -59,7 +91,7 @@ const draw = async function() {
         { 'x': 0.82763, 'label': '$X$'.toTex() },
         { 'x': 1.09068, 'label': '$M$'.toTex() },
         { 'x': 1.46269, 'label': '$\\Gamma$'.toTex() },
-        { 'x': 1.72574, 'label': '$X$'.toTex() }
+        { 'x': 1.718, 'label': '$X$'.toTex() }
     ]
 
     x.domain([kmin, kmax])
@@ -75,9 +107,9 @@ const draw = async function() {
     svg.append("g")
         .attr("class", "y-axis")
         .attr("transform", "translate(" + 0 + ",0)")
-        .call(d3.axisLeft(y).ticks(7).tickSize(-5)); //.
+        .call(d3.axisLeft(y).ticks(7).tickSize(-10));
 
-    var tx = -20;
+    var tx = -25;
     var ty = 10;
     var tw = 50;
     var th = 50;
@@ -114,24 +146,26 @@ const draw = async function() {
             'color': 'red'
         },
         'dos': {
-            'cols': [1, 2, 5, 6, 7, 12, 13],
-            'color': ['#cccccc', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+            'file':'viz/dos_MAPI.csv',
+            'cols': [1, 2, 5, 6, 7, 13, 14],
+            'color': ['rgba(221, 221, 221, 0.4)', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+            'opacity':0
         },
         'legend': {
             'name': '$CH_3NH_3PbI_3$'.toTex(),
             'marker': 'rect',
-            'x': pumbaa.width + 10,
-            'y': pumbaa.margin.top + 40,
+            'x': 200,
+            'y': -30,
             'width': 20,
         },
-        // 'orbital': {
-        //     'atomIndex': [3, 4, 8, 11, 12],
-        //     'atomType': ['C', 'N', 'H', 'Pb', 'I'],
-        //     'atomColor': ['#984EA4','#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-        //     'mode': 'dot',
-        //     'opacity':0
-        //     // 'mode': 'line' //TODO
-        // },
+        'orbital': {
+            'atomIndex': [3, 4, 5, 11, 12],
+            'atomType': ['C', 'N', 'H', 'Pb', 'I'],
+            'atomColor': ['#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+            'mode': 'dot',
+            'opacity': 0,
+            // 'mode': 'line' //TODO
+        },
     }
 
     stylePI = {
@@ -144,14 +178,24 @@ const draw = async function() {
         'legend': {
             'name': '$PbI_3^-$'.toTex(),
             'marker': 'rect',
-            'x': pumbaa.width + 10,
-            'y': pumbaa.margin.top,
+            'x': 10,
+            'y': -30,
             'width': 20,
-        }
+        },
+        'orbital': false,
+        'dos': {
+            'file':'viz/dos_PI.csv',
+            'cols': [1],
+            'color': ['rgba(221, 221, 221, 0.4)'],
+            'opacity':1
+        },
     }
 
     trace(MAPI, styleMAPI)
     trace(PI, stylePI)
+    legend(MAPI, styleMAPI)
+    legend(PI, stylePI)
+
 
     // add the x-axis at top of the page
     svg.append("g")
@@ -171,11 +215,6 @@ const draw = async function() {
 draw()
 
 function trace(data, style) {
-    // var bandGroup = ['MAPI', 'PI']
-    // var bandColor = d3.scaleOrdinal()
-    //     .domain(bandGroup).range(d3.schemePaired);
-    //     console.log(bandColor(style.name))
-
     var line = d3.line().defined(function(d, i) {
         var next = 0
         var dataSize = data.length
@@ -201,10 +240,10 @@ function trace(data, style) {
     }
 
     if (style.dos) {
-        d3.csv("viz/dos.csv", type_dos).then(function(dosdata) { dos(dosdata); })
+        d3.csv(style.dos.file, type_dos).then(function(dosdata) { dos(dosdata); })
 
         function dos(dosdata) {
-            lCharge = []
+            lCharge = new Array()
             for (let il of style.dos.cols) {
                 lCharge.push(dosdata.columns[il])
             }
@@ -246,59 +285,68 @@ function trace(data, style) {
                     svg.selectAll('tdos')
                         .data([dosdata]).enter().append("path")
                         .attr("transform", "translate(" + pumbaa.width + ",0)")
-                        .attr('class', 'tdos')
+                        .attr('class',style.name)
+                        .attr('id', 'dos')
                         .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
                         .attr("stroke-width", (style.line.width / 2))
-                        .attr("opacity", 0.5)
+                        .attr("opacity", style.dos.opacity )
                         .attr("fill", lColor(`${Z}`))
                         .attr("d", dosarea);
                 } else {
                     svg.selectAll('dos')
                         .data([dosdata]).enter().append("path")
                         .attr("transform", "translate(" + pumbaa.width + ",0)")
-                        .attr('class', 'dos')
+                        .attr('class',`atom-${Z}`)
+                        .attr('id', 'orbital')
                         .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
                         .attr("stroke-width", (style.line.width / 2))
                         .style("stroke-dasharray", (d => { return `${Z}` == 'inter' ? ("1, 1") : 'none' }))
-                        .attr("opacity", 1)
+                        .attr("opacity", style.dos.opacity)
                         .attr("fill", 'none')
                         .attr("d", dosline);
                 }
             }
         }
-
     }
 
     if (style.orbital) {
-        atoms = []
+        atoms = new Array()
         for (let iatom of style.orbital.atomIndex) {
             atoms.push(data.columns[iatom])
         }
-        var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
         // console.log(atoms)
-        for (let Z of atoms) {
-            svg.selectAll('dot').data(data.filter(function(d, i) {
-                    return d.e >= emin && d.e <= emax
-                }))
-                .enter().append('circle')
-                .attr('class', `atom-${Z}`)
-                .attr('id', 'orbital')
-                // .on("mouseover", mouseover)
-                // .on("mousemove", mousemove)
-                // .on("mouseleave", mouseleave)
-                .attr('r', d => { if (d[`${Z}`] > 0.001) { return d[`${Z}`] * 8 } else { return 0 } })
-                .attr('cx', d => x(d.k))
-                .attr('cy', d => y(d.e))
-                .attr('fill', atomColor(`${Z}`))
-                .attr("opacity", style.orbital.opacity);
-        }
-        subLabelMarker(atoms, style.legend.x, style.legend.y + 40, style.legend.width)
+        var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
+            for (let Z of atoms) {
+                svg.selectAll('dot').data(data.filter(function(d, i) {
+                        return d.e >= emin && d.e <= emax
+                    }))
+                    .enter().append('circle')
+                    .attr('class', `atom-${Z}`)
+                    .attr('id', 'orbital')
+                    // .on("mouseover", mouseover)
+                    // .on("mousemove", mousemove)
+                    // .on("mouseleave", mouseleave)
+                    .attr('r', d => { if (d[`${Z}`] > 0.001) { return d[`${Z}`] * 8 } else { return 0 } })
+                    .attr('cx', d => x(d.k))
+                    .attr('cy', d => y(d.e))
+                    .attr('fill', atomColor(`${Z}`))
+                    .attr("opacity", style.orbital.opacity);
+            }
     }
+}
 
+function legend(data, style) {
     // add legend
     if (style.legend) {
         labelMarker(style.legend.marker, style.legend.x, style.legend.y, style.legend.width)
         label(style.legend.x + style.legend.width + 10, style.legend.y + style.legend.width - 20, style.legend.name)
+    }
+    if (style.orbital) {
+        // for (let iatom of style.orbital.atomIndex) {
+        //     atoms.push(data.columns[iatom])
+        // }
+        var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
+        subLabelMarker(atoms, pumbaa.width + 5, style.legend.y + 5, style.legend.width)
     }
 
 
@@ -357,9 +405,6 @@ function trace(data, style) {
 
     }
 
-    // if (style.orbital) {  }
-    // console.log(colors('1f77b4ff7f0e'))
-
     function subLabelMarker(atoms, x, y, r) {
         let j = 0
         for (let i of atoms) {
@@ -403,8 +448,6 @@ function trace(data, style) {
 }
 
 
-
-
 // helper functions
 function type(d) {
     d.k = +d.k;
@@ -418,41 +461,36 @@ function type_dos(d) {
     d.tDOS = +d.tDOS;
     return d;
 }
-// function colors(specifier) {
-//   var n = specifier.length / 6 | 0, colors = new Array(n), i = 0;
-//   while (i < n) colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
-//   return colors;
-// }
 
 var fmt = (a) => d3.format(a)
 // create a tooltip
-var Tooltip = d3.select("#dataviz")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
+// var Tooltip = d3.select("#dataviz")
+//     .append("div")
+//     .style("opacity", 0)
+//     .attr("class", "tooltip")
 
-// Three function that change the tooltip when user hover / move / leave a cell
-var mouseover = function(d) {
-    Tooltip.style("opacity", 1)
-    d3.select(this)
-        .attr('r', 6)
-}
+// // Three function that change the tooltip when user hover / move / leave a cell
+// var mouseover = function(d) {
+//     Tooltip.style("opacity", 1)
+//     d3.select(this)
+//         .attr('r', 6)
+// }
 
-var mousemove = function(d) {
-    bgColor = d3.select(this).attr("fill")
-    symbol = d3.select(this).attr("id") //'MAPI'
-    Tooltip.attr("alignment-baseline", "middle")
-        .html(
-            `<div id='tooltip-left' style="background:${bgColor}">` +
-            fmt(".2f")(d.e) +
-            `</div><div id='tooltip-right' style="color:${bgColor}">` +
-            symbol + `</div>`
-        )
-        .style("left", (d3.mouse(this)[0] + 40) + "px")
-        .style("top", (d3.mouse(this)[1] + 60) + "px")
-}
+// var mousemove = function(d) {
+//     bgColor = d3.select(this).attr("fill")
+//     symbol = d3.select(this).attr("id") //'MAPI'
+//     Tooltip.attr("alignment-baseline", "middle")
+//         .html(
+//             `<div id='tooltip-left' style="background:${bgColor}">` +
+//             fmt(".2f")(d.e) +
+//             `</div><div id='tooltip-right' style="color:${bgColor}">` +
+//             symbol + `</div>`
+//         )
+//         .style("left", (d3.mouse(this)[0] + 40) + "px")
+//         .style("top", (d3.mouse(this)[1] + 60) + "px")
+// }
 
-var mouseleave = function(d) {
-    Tooltip.style("opacity", 0)
-    d3.select(this).attr('r', 2)
-}
+// var mouseleave = function(d) {
+//     Tooltip.style("opacity", 0)
+//     d3.select(this).attr('r', 2)
+// }

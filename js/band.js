@@ -24,18 +24,19 @@ var svg = d3.select("#dataviz").append("svg")
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
 
+resize('#chart')
 
 /**
  * adapt graph according to the window resize
  * @type {jQuery auto load function}
  */
-$(window).resize(function() {
-    var chart = $("#chart")
-    var targetWidth = chart.parent().width();
-    var aspect = chart.width() / chart.height();
-    chart.attr("width", targetWidth);
-    chart.attr("height", Math.round(targetWidth / aspect));
-});
+// $(window).resize(function() {
+//     var chart = $("#chart")
+//     var targetWidth = chart.parent().width();
+//     var aspect = chart.width() / chart.height();
+//     chart.attr("width", targetWidth);
+//     chart.attr("height", Math.round(targetWidth / aspect));
+// });
 
 /**
  * setup for axis and ticks
@@ -123,14 +124,14 @@ const draw = async function() {
             'y': margin.top + 40,
             'width': 20,
         },
-        // 'orbital': {
-        //     'atomIndex': [3, 4, 8, 11, 12],
-        //     'atomType': ['C', 'N', 'H', 'Pb', 'I'],
-        //     'atomColor': ['#984EA4','#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-        //     'mode': 'dot',
-        //     'opacity':0
-        //     // 'mode': 'line' //TODO
-        // },
+        'orbital': {
+            'atomIndex': [3, 4, 8, 11, 12],
+            'atomType': ['C', 'N', 'H', 'Pb', 'I'],
+            'atomColor': ['#984EA4','#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+            'mode': 'dot',
+            'opacity':0
+            // 'mode': 'line' //TODO
+        },
     }
 
     stylePI = {
@@ -264,9 +265,6 @@ function trace(data, style) {
                         .attr("d", dosline);
                 }
             }
-
-
-            console.log('dos is true')
         }
 
     }
