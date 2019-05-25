@@ -6,6 +6,8 @@ class Draw {
         this.height = (canvas.height) ? (canvas.height - this.margin.top - this.margin.bottom) : (600 - this.margin.top - this.margin.bottom)
         this.viewWidth = (canvas.view.width) ? (canvas.view.width) : this.width
         this.viewHeight = (canvas.view.height) ? (canvas.view.height) : this.height
+        this.x
+        this.y
     }
     plot(description) {
         this.svg = d3.select(this.canvasId).append("svg")
@@ -16,28 +18,44 @@ class Draw {
             .attr("height", this.viewHeight)
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-        // var ifData = this.setData(description)
-        // ifData.then(function(value) {
 
-        //     console.log(value[0])
-        // })
+        if(description.domain){
+            var xMin, xMax, yMin, yMax
+            xMin=0;xMax=1;yMin=0;yMax=1
+            if (description.domain.x){
+                var xDom = description.domain.x
+            }else{
+                var xDom = [xMin,xMax]
+            }
+            if (description.domain.y){
+                 var yDom = description.domain.y
+            }else{
+                var yDom = [ymin,yMax]
+            }
+            this.x = d3.scaleLinear().range([0, this.width]).domain(xDom)
+            this.y = d3.scaleLinear().range([this.height, 0]).domain(yDom)
+        }
+        var ifData = this.readData(description)
+        var test1
+        ifData.then(function(value) {
+            test1 = value[0]
+        })
+        console.log(test1)
         // console.log(ifData)
         return this.svg
 
     }
-    x(){
-        return  d3.scaleLinear().range([0, this.width])
-    }
-    y(){
-        return d3.scaleLinear().range([this.height, 0])
-    }
-    async setData(description) {
+    async readData(description) {
         var data = new Array()
         for (let file of description.file) {
             data.push(await d3.csv(file, type))
         }
         return data
     }
+
+    // trace(){
+
+    // }
 }
 
 
@@ -52,25 +70,78 @@ var canvas = {
 
 var data = {
     'file': ['viz/band.csv', 'viz/band_test.csv'],
+    'select': {'x':1, 'y':2}, //colums as x axis and y axis
     'scale': 'linear',
     // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
-    'domain': { 'y': [-9, 5] }
+    'domain': { 'x':[0, 1.718], 'y': [-9, 5] }
 }
 
-// var style={
+var style={
+    //'style':['styleMAPI', 'stylePI']
+    'style':[
+        {
+            'name': 'MAPI',
+            'line': {
+                'color': '#a6cee3',
+                'width': 4,
+                'opacity': 0,
+            },
+            'marker': {
+                'color': 'red'
+            },
+            'dos': {
+                'file':'viz/dos_MAPI.csv',
+                'cols': [1, 2, 5, 6, 7, 13, 14],
+                'color': ['rgba(221, 221, 221, 0.4)', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+                'opacity':0
+            },
+            'legend': {
+                'name': '$CH_3NH_3PbI_3$'.toTex(),
+                'marker': 'rect',
+                'x': 200,
+                'y': -30,
+                'width': 20,
+            },
+            'orbital': {
+                'atomIndex': [3, 4, 5, 11, 12],
+                'atomType': ['C', 'N', 'H', 'Pb', 'I'],
+                'atomColor': ['#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
+                'mode': 'dot',
+                'opacity': 0,
+                // 'mode': 'line' //TODO
+            },
+        },
+        {
+            'name': 'PI',
+            'line': {
+                'color': '#1f78b4',
+                'width': 4,
+                'opacity': 1
+            },
+            'legend': {
+                'name': '$PbI_3^-$'.toTex(),
+                'marker': 'rect',
+                'x': 10,
+                'y': -30,
+                'width': 20,
+            },
+            'orbital': false,
+            'dos': {
+                'file':'viz/dos_PI.csv',
+                'cols': [1],
+                'color': ['rgba(221, 221, 221, 0.4)'],
+                'opacity':1
+            },
+        }
+    ]
 
-// }
+}
 
 resize("#canvas")
 pumbaa = new Draw(canvas)
 svg = pumbaa.plot(data)
-// dat = pumbaa.setData(data)
-// dat.then(function(val){
-//     console.log(val.length)
-// })
-
-var x = pumbaa.x()
-var y = pumbaa.y()
+var x = pumbaa.x
+var y = pumbaa.y
 
 /**
  * setup for axis and ticks
@@ -80,10 +151,10 @@ const draw = async function() {
     var MAPI = await d3.csv("viz/band.csv", type)
     var PI = await d3.csv("viz/band_PI.csv", type)
 
-    kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
-    kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
-    emax = 5
-    emin = -9
+    // kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
+    // kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
+    // emax = 5
+    // emin = -9
 
     var hSym = [
         { 'x': 0.00000, 'label': '$\\Gamma$'.toTex() },
@@ -93,10 +164,6 @@ const draw = async function() {
         { 'x': 1.46269, 'label': '$\\Gamma$'.toTex() },
         { 'x': 1.718, 'label': '$X$'.toTex() }
     ]
-
-    x.domain([kmin, kmax])
-    y.domain([emin, emax])
-
     // Add the x-axis at bottom of the page
     svg.append("g")
         .attr("class", "x-axis")
@@ -127,74 +194,19 @@ const draw = async function() {
 
     svg.append('line')
         .attr('class', 'zeroline')
-        .attr('x1', x(kmin))
+        .attr('x1', x(pumbaa.x.domain()[0]))
         .attr('y1', y(0))
-        .attr('x2', x(kmax))
+        .attr('x2', x(pumbaa.x.domain()[1]))
         .attr('y2', y(0))
         .style("stroke-dasharray", ("6, 1"))
 
     // trace( data, style )
 
-    styleMAPI = {
-        'name': 'MAPI',
-        'line': {
-            'color': '#a6cee3',
-            'width': 4,
-            'opacity': 0,
-        },
-        'marker': {
-            'color': 'red'
-        },
-        'dos': {
-            'file':'viz/dos_MAPI.csv',
-            'cols': [1, 2, 5, 6, 7, 13, 14],
-            'color': ['rgba(221, 221, 221, 0.4)', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-            'opacity':0
-        },
-        'legend': {
-            'name': '$CH_3NH_3PbI_3$'.toTex(),
-            'marker': 'rect',
-            'x': 200,
-            'y': -30,
-            'width': 20,
-        },
-        'orbital': {
-            'atomIndex': [3, 4, 5, 11, 12],
-            'atomType': ['C', 'N', 'H', 'Pb', 'I'],
-            'atomColor': ['#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-            'mode': 'dot',
-            'opacity': 0,
-            // 'mode': 'line' //TODO
-        },
-    }
-
-    stylePI = {
-        'name': 'PI',
-        'line': {
-            'color': '#1f78b4',
-            'width': 4,
-            'opacity': 1
-        },
-        'legend': {
-            'name': '$PbI_3^-$'.toTex(),
-            'marker': 'rect',
-            'x': 10,
-            'y': -30,
-            'width': 20,
-        },
-        'orbital': false,
-        'dos': {
-            'file':'viz/dos_PI.csv',
-            'cols': [1],
-            'color': ['rgba(221, 221, 221, 0.4)'],
-            'opacity':1
-        },
-    }
-
-    trace(MAPI, styleMAPI)
-    trace(PI, stylePI)
-    legend(MAPI, styleMAPI)
-    legend(PI, stylePI)
+    // console.log(style)
+    trace(MAPI, style.style[0])
+    trace(PI, style.style[1])
+    legend(MAPI, style.style[0])
+    legend(PI, style.style[1])
 
 
     // add the x-axis at top of the page
@@ -220,17 +232,13 @@ function trace(data, style) {
         var dataSize = data.length
         if (i < dataSize - 1) {
             next = data[i + 1].k
-            return d.k <= next && d.e >= emin && d.e <= emax;
+            return d.k <= next && d.e >= pumbaa.y.domain()[0] && d.e <= pumbaa.y.domain()[1];
         }
-    });
-
-    line.x(d => x(d.k))
-    line.y(d => y(d.e))
+    }).x(d => x(d.k)).y(d => y(d.e))
 
     if (style.line) {
         svg.selectAll('band')
             .data([data]).enter().append("path")
-            // .attr("class", "line")
             .attr('class', style.name)
             .attr('stroke', style.line.color) //d => bandColor(style.name)
             .attr("stroke-width", style.line.width)
@@ -252,7 +260,7 @@ function trace(data, style) {
             var xDos = d3.scaleLinear().range([0, (pumbaa.viewWidth - pumbaa.width - pumbaa.margin.left - pumbaa.margin.right)]) //energy
             var yDos = d3.scaleLinear().range([pumbaa.height, 0]) //pdos
             xDos.domain([0, d3.max(dosdata, d => d.tDOS)])
-            yDos.domain([emin, emax])
+            yDos.domain([pumbaa.y.domain()[0], pumbaa.y.domain()[1]])
             // Add the x-axis at left of widthinfo
             svg.append("g")
                 .attr("class", "x-axis")
@@ -273,10 +281,10 @@ function trace(data, style) {
                 .call(d3.axisTop(xDos).tickFormat((d) => '').tickSize(0))
 
             for (let Z of lCharge) {
-                var dosline = d3.line().defined(function(d) { return d.e >= emin && d.e <= emax })
+                var dosline = d3.line().defined(function(d) { return d.e >= pumbaa.y.domain()[0] && d.e <= pumbaa.y.domain()[1] })
                     .x(d => xDos(d[`${Z}`]))
                     .y(d => yDos(d.e));
-                var dosarea = d3.area().defined(function(d) { return d.e >= emin && d.e <= emax })
+                var dosarea = d3.area().defined(function(d) { return d.e >= pumbaa.y.domain()[0] && d.e <= pumbaa.y.domain()[1] })
                     .x(d => xDos(d[`${Z}`]))
                     .y1(d => yDos(d.e))
                 // .y0(widthInfo)
@@ -318,7 +326,7 @@ function trace(data, style) {
         var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
             for (let Z of atoms) {
                 svg.selectAll('dot').data(data.filter(function(d, i) {
-                        return d.e >= emin && d.e <= emax
+                        return d.e >= pumbaa.y.domain()[0] && d.e <= pumbaa.y.domain()[1]
                     }))
                     .enter().append('circle')
                     .attr('class', `atom-${Z}`)
