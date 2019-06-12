@@ -1,62 +1,5 @@
-// class Draw {
-//     constructor(canvas) {
-//         this.margin = (canvas.margin) ? canvas.margin : { top: 60, right: 60, bottom: 60, left: 60 }
-//         this.canvasId = (canvas.name) ? `#${canvas.name}` : '#dataviz'
-//         this.width = (canvas.width) ? (canvas.width - this.margin.left - this.margin.right) : (600 - this.margin.left - this.margin.right)
-//         this.height = (canvas.height) ? (canvas.height - this.margin.top - this.margin.bottom) : (600 - this.margin.top - this.margin.bottom)
-//         this.viewWidth = (canvas.view.width) ? (canvas.view.width) : this.width
-//         this.viewHeight = (canvas.view.height) ? (canvas.view.height) : this.height
-//         this.x
-//         this.y
-//     }
-//     plot(description) {
-//         this.svg = d3.select(this.canvasId).append("svg")
-//             .attr('id', 'canvas')
-//             .attr("viewBox", `0 0 ${this.viewWidth} ${this.viewHeight}`)
-//             .attr("preserveAspectRatio", "xMinYMin")
-//             .attr("width", this.viewWidth)
-//             .attr("height", this.viewHeight)
-//             .append("g")
-//             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-
-//         if(description.domain){
-//             var xMin, xMax, yMin, yMax
-//             xMin=0;xMax=1;yMin=0;yMax=1
-//             if (description.domain.x){
-//                 var xDom = description.domain.x
-//             }else{
-//                 var xDom = [xMin,xMax]
-//             }
-//             if (description.domain.y){
-//                  var yDom = description.domain.y
-//             }else{
-//                 var yDom = [ymin,yMax]
-//             }
-//             this.x = d3.scaleLinear().range([0, this.width]).domain(xDom)
-//             this.y = d3.scaleLinear().range([this.height, 0]).domain(yDom)
-//         }
-//         var ifData = this.readData(description)
-//         var test1
-//         ifData.then(function(value) {
-//             test1 = value[0]
-//         })
-//         console.log(test1)
-//         // console.log(ifData)
-//         return this.svg
-
-//     }
-//     async readData(description) {
-//         var data = new Array()
-//         for (let file of description.file) {
-//             data.push(await d3.csv(file, type))
-//         }
-//         return data
-//     }
-// }
-
-
 var canvas = {
-    'name': 'dataviz',
+    'name': 'compression',
     'view': { 'width': 1100, 'height': 650 },
     'width': 900,
     'height': 650,
@@ -134,17 +77,17 @@ var style={
 
 }
 
-resize("#canvas")
-pumba = new Draw(canvas)
-svg = pumba.plot(data)
-var x = pumba.x
-var y = pumba.y
+// resize("#canvas")
+pumba2 = new Draw(canvas)
+svg = pumba2.plot(data)
+var x = pumba2.x
+var y = pumba2.y
 
 /**
  * setup for axis and ticks
  * @return {svg} 
  */
-const draw = async function() {
+const draw2 = async function() {
     var MAPI = await d3.csv("viz/band.csv", type)
     var PI = await d3.csv("viz/band_PI.csv", type)
 
@@ -164,8 +107,8 @@ const draw = async function() {
     // Add the x-axis at bottom of the page
     svg.append("g")
         .attr("class", "x-axis")
-        .attr("transform", "translate(0," + (pumba.height) + ")")
-        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-pumba.height))
+        .attr("transform", "translate(0," + (pumba2.height) + ")")
+        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-pumba2.height))
 
     // Add the y-axis.
     svg.append("g")
@@ -182,7 +125,7 @@ const draw = async function() {
         .call(x)
         .selectAll("g").data(hSym).enter().append("foreignObject")
         .attr('class', 'xTicks')
-        .attr("transform", "translate(0," + (pumba.height) + ")")
+        .attr("transform", "translate(0," + (pumba2.height) + ")")
         .attr("width", tw)
         .attr("height", th)
         .attr("x", (d) => x(d.x) + tx)
@@ -191,19 +134,19 @@ const draw = async function() {
 
     svg.append('line')
         .attr('class', 'zeroline')
-        .attr('x1', x(pumba.x.domain()[0]))
+        .attr('x1', x(pumba2.x.domain()[0]))
         .attr('y1', y(0))
-        .attr('x2', x(pumba.x.domain()[1]))
+        .attr('x2', x(pumba2.x.domain()[1]))
         .attr('y2', y(0))
         .style("stroke-dasharray", ("6, 1"))
 
-    // trace( data, style )
+    // trace2( data, style )
 
     // console.log(style)
-    trace(MAPI, style.style[0])
-    trace(PI, style.style[1])
-    legend(MAPI, style.style[0])
-    legend(PI, style.style[1])
+    trace2(MAPI, style.style[0])
+    trace2(PI, style.style[1])
+    legend2(MAPI, style.style[0])
+    legend2(PI, style.style[1])
 
 
     // add the x-axis at top of the page
@@ -215,13 +158,13 @@ const draw = async function() {
     // // add the y-axis at right of the page
     // svg.append("g")
     //     .attr("class", "y-axis")
-    //     .attr("transform", "translate(" + (pumba.width) + ",0)")
+    //     .attr("transform", "translate(" + (pumba2.width) + ",0)")
     //     .call(d3.axisRight(y).ticks(7).tickSize(-5).tickFormat((d) => ''))
     svg.append("foreignObject")
             .attr("class", 'y-label')
             .attr("width", 150)
             .attr("height", 130)
-            .attr("x",(-1*pumba.height/1.75))
+            .attr("x",(-1*pumba2.height/1.75))
             .attr("y",-60)
             .style("color", 'black')
             .style('font-size', '16px')
@@ -231,15 +174,15 @@ const draw = async function() {
             .attr("transform", "rotate(-90)")
 }
 
-draw()
+draw2()
 
-function trace(data, style) {
+function trace2(data, style) {
     var line = d3.line().defined(function(d, i) {
         var next = 0
         var dataSize = data.length
         if (i < dataSize - 1) {
             next = data[i + 1].k
-            return d.k <= next && d.e >= pumba.y.domain()[0] && d.e <= pumba.y.domain()[1];
+            return d.k <= next && d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1];
         }
     }).x(d => x(d.k)).y(d => y(d.e))
 
@@ -264,34 +207,34 @@ function trace(data, style) {
             }
             var lColor = d3.scaleOrdinal().domain(lCharge).range(style.dos.color);
             // console.log(dosdata.columns.slice(17))
-            var xDos = d3.scaleLinear().range([0, (pumba.viewWidth - pumba.width - pumba.margin.left - pumba.margin.right)]) //energy
-            var yDos = d3.scaleLinear().range([pumba.height, 0]) //pdos
+            var xDos = d3.scaleLinear().range([0, (pumba2.viewWidth - pumba2.width - pumba2.margin.left - pumba2.margin.right)]) //energy
+            var yDos = d3.scaleLinear().range([pumba2.height, 0]) //pdos
             xDos.domain([0, d3.max(dosdata, d => d.tDOS)])
-            yDos.domain([pumba.y.domain()[0], pumba.y.domain()[1]])
+            yDos.domain([pumba2.y.domain()[0], pumba2.y.domain()[1]])
             // Add the x-axis at left of widthinfo
             svg.append("g")
                 .attr("class", "x-axis")
-                .attr("transform", "translate(" + (pumba.viewWidth - pumba.margin.right - pumba.margin.left) + ",0)")
+                .attr("transform", "translate(" + (pumba2.viewWidth - pumba2.margin.right - pumba2.margin.left) + ",0)")
                 .call(d3.axisRight(yDos).ticks(7).tickSize(-5).tickFormat((d) => ''));
 
 
             // Add the y-axis.
             svg.append("g")
                 .attr("class", "y-axis")
-                .attr("transform", "translate(" + pumba.width + "," + pumba.height + ")")
+                .attr("transform", "translate(" + pumba2.width + "," + pumba2.height + ")")
                 .call(d3.axisBottom(xDos).tickFormat((d) => '').tickSize(0))
 
             // add the x-axis at top of the page
             svg.append("g")
                 .attr("class", "x-axis")
-                .attr("transform", "translate(" + pumba.width + ",-1)")
+                .attr("transform", "translate(" + pumba2.width + ",-1)")
                 .call(d3.axisTop(xDos).tickFormat((d) => '').tickSize(0))
 
             for (let Z of lCharge) {
-                var dosline = d3.line().defined(function(d) { return d.e >= pumba.y.domain()[0] && d.e <= pumba.y.domain()[1] })
+                var dosline = d3.line().defined(function(d) { return d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1] })
                     .x(d => xDos(d[`${Z}`]))
                     .y(d => yDos(d.e));
-                var dosarea = d3.area().defined(function(d) { return d.e >= pumba.y.domain()[0] && d.e <= pumba.y.domain()[1] })
+                var dosarea = d3.area().defined(function(d) { return d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1] })
                     .x(d => xDos(d[`${Z}`]))
                     .y1(d => yDos(d.e))
                 // .y0(widthInfo)
@@ -299,7 +242,7 @@ function trace(data, style) {
                 if (`${Z}` == 'tDOS') {
                     svg.selectAll('tdos')
                         .data([dosdata]).enter().append("path")
-                        .attr("transform", "translate(" + pumba.width + ",0)")
+                        .attr("transform", "translate(" + pumba2.width + ",0)")
                         .attr('class',style.name)
                         .attr('id', 'dos')
                         .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
@@ -310,7 +253,7 @@ function trace(data, style) {
                 } else {
                     svg.selectAll('dos')
                         .data([dosdata]).enter().append("path")
-                        .attr("transform", "translate(" + pumba.width + ",0)")
+                        .attr("transform", "translate(" + pumba2.width + ",0)")
                         .attr('class',`atom-${Z}`)
                         .attr('id', 'orbital')
                         .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
@@ -333,7 +276,7 @@ function trace(data, style) {
         var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
             for (let Z of atoms) {
                 svg.selectAll('dot').data(data.filter(function(d, i) {
-                        return d.e >= pumba.y.domain()[0] && d.e <= pumba.y.domain()[1]
+                        return d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1]
                     }))
                     .enter().append('circle')
                     .attr('class', `atom-${Z}`)
@@ -350,8 +293,8 @@ function trace(data, style) {
     }
 }
 
-function legend(data, style) {
-    // add legend
+function legend2(data, style) {
+    // add legend2
     if (style.legend) {
         labelMarker(style.legend.marker, style.legend.x, style.legend.y, style.legend.width)
         label(style.legend.x + style.legend.width + 10, style.legend.y + style.legend.width - 20, style.legend.name)
@@ -361,7 +304,7 @@ function legend(data, style) {
         //     atoms.push(data.columns[iatom])
         // }
         var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
-        subLabelMarker(atoms, pumba.width + 5, style.legend.y + 5, style.legend.width)
+        subLabelMarker(atoms, pumba2.width + 5, style.legend.y + 5, style.legend.width)
     }
 
 

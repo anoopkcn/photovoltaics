@@ -46,3 +46,58 @@ function colors(specifier) {
     while (i < n) colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
     return colors;
 };
+
+class Draw {
+    constructor(canvas) {
+        this.margin = (canvas.margin) ? canvas.margin : { top: 60, right: 60, bottom: 60, left: 60 }
+        this.canvasId = (canvas.name) ? `#${canvas.name}` : '#dataviz'
+        this.width = (canvas.width) ? (canvas.width - this.margin.left - this.margin.right) : (600 - this.margin.left - this.margin.right)
+        this.height = (canvas.height) ? (canvas.height - this.margin.top - this.margin.bottom) : (600 - this.margin.top - this.margin.bottom)
+        this.viewWidth = (canvas.view.width) ? (canvas.view.width) : this.width
+        this.viewHeight = (canvas.view.height) ? (canvas.view.height) : this.height
+        this.x
+        this.y
+    }
+    plot(description) {
+        this.svg = d3.select(this.canvasId).append("svg")
+            .attr('id', 'canvas')
+            .attr("viewBox", `0 0 ${this.viewWidth} ${this.viewHeight}`)
+            .attr("preserveAspectRatio", "xMinYMin")
+            .attr("width", this.viewWidth)
+            .attr("height", this.viewHeight)
+            .append("g")
+            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+
+        if(description.domain){
+            var xMin, xMax, yMin, yMax
+            xMin=0;xMax=1;yMin=0;yMax=1
+            if (description.domain.x){
+                var xDom = description.domain.x
+            }else{
+                var xDom = [xMin,xMax]
+            }
+            if (description.domain.y){
+                 var yDom = description.domain.y
+            }else{
+                var yDom = [ymin,yMax]
+            }
+            this.x = d3.scaleLinear().range([0, this.width]).domain(xDom)
+            this.y = d3.scaleLinear().range([this.height, 0]).domain(yDom)
+        }
+        // var ifData = this.readData(description)
+        // var test1
+        // ifData.then(function(value) {
+        //     test1 = value[0]
+        // })
+        // console.log(ifData)
+        return this.svg
+
+    }
+    // async readData(description) {
+    //     var data = new Array()
+    //     for (let file of description.file) {
+    //         data.push(await d3.csv(file, type))
+    //     }
+    //     return data
+    // }
+}

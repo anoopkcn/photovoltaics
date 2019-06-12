@@ -50,10 +50,12 @@
 
 .xTicks {
     color: #625F5D;
-    font-size: 18px;
+    /*font-size: 20px;*/
+    font: normal 0.60em KaTeX_Main, Times New Roman, serif;
 }
 
 .zeroline {
     stroke: #BFBFBA;
     stroke-width: 2px;
 }
+.katex { font-size: 1.1em; }

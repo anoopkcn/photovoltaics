@@ -1,0 +1,357 @@
+<!-- viz -->
+<!DOCTYPE html>
+<link rel="stylesheet" href="../js/katex/katex.css">
+<script src="../js/katex/katex.min.js"></script>
+<script src="../js/d3.v5.min.js"></script>
+<script src="../js/pumbaa.js"></script>
+<div id="compression"></div>
+<style>
+svg {
+    display: block;
+    margin: auto;
+    margin-top: 50px;
+}
+
+/* Band And DOS*/
+.axis {
+    shape-rendering: crispEdges;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    font: 12px sans-serif;
+    border: 0px;
+    pointer-events: none;
+    font-size: 16px;
+}
+
+#tooltip-left {
+    color: #ffffff;
+    padding: 2px;
+    float: left;
+}
+
+#tooltip-right {
+    float: left;
+    padding: 2px;
+    color: #625F5D;
+    background: hsla(0, 0%, 100%, 0.525);
+    /* opacity: 0.5; */
+}
+
+.x-axis text,
+.y-axis text {
+    font-size: 20px;
+    fill: #625F5D;
+}
+
+.x-axis line,
+.y-axis line {
+    stroke: #625F5D;
+}
+
+.x-axis path,
+.y-axis path {
+    stroke: #BFBFBA;
+    stroke-width: 2px;
+}
+
+.tick line {
+    stroke: #BFBFBA;
+}
+
+.xTicks {
+    color: #625F5D;
+    /*font-size: 20px;*/
+    font: normal 1.30em KaTeX_Main, Times New Roman, serif;
+}
+
+.zeroline {
+    stroke: #BFBFBA;
+    stroke-width: 2px;
+}
+
+.katex {
+    font-size: 1.1em;
+}
+</style>
+<script>
+var canvas = {
+    'name': 'compression',
+    'view': { 'width': 1000, 'height': 650 },
+    'width': 1000,
+    'height': 650,
+    'margin': { 'top': 60, 'right': 60, 'bottom': 60, 'left': 60 },
+    'resize': true
+}
+
+var data = {
+    'file': ['band.csv', 'band_test.csv'],
+    'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
+    'scale': 'linear',
+    // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
+    'domain': { 'x': [0, 1.70100], 'y': [-5, 5] }
+}
+
+var style = {
+    'style': [{
+            'name': 'MAPIKS',
+            'file': "gw/spexband.csv",
+            'select': { 'x': 1, 'y': 2 },
+            'line': {
+                'color': '#1f78b4',
+                'smooth': 'spline-cat',
+                'width': 4,
+                'opacity': 1
+            },
+            'legend': {
+                'name': 'MAPI - DFT',
+                'marker': 'rect',
+                'x': 0,
+                'y': -30,
+                'width': 20,
+            },
+        },
+        {
+            'name': 'MAPIGW',
+            'file': "gw/spexband.csv",
+            'select': { 'x': 1, 'y': 3 },
+            // 'dot': {
+            //     'color': '#E48733',
+            //     'r': 2.5,
+            //     'opacity': 1,
+            //     'stroke': '#ffffff',
+            //     'strokeWidth': 3
+            // },
+            'line': {
+                'color': '#E48733',
+                'smooth': 'spline-cat',
+                'width': 3,
+                'opacity': 1
+            },
+            'legend': {
+                'name': 'MAPI - GW',
+                'marker': 'rect',
+                'x': 200,
+                'y': -30,
+                'width': 20,
+            },
+        }
+    ]
+}
+
+// resize("#canvas")
+pumba = new Draw(canvas)
+svg = pumba.plot(data)
+var x = pumba.x
+var y = pumba.y
+
+/**
+ * setup for axis and ticks
+ * @return {svg} 
+ */
+const draw = async function(style) {
+    // kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
+    // kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
+
+    var hSym = [
+        { 'x': 0.00000, 'label': '$\\Gamma$'.toTex() },
+        { 'x': 0.45562, 'label': 'R' },
+        { 'x': 0.82763, 'label': 'X' },
+        { 'x': 1.09068, 'label': 'M' },
+        { 'x': 1.46269, 'label': '$\\Gamma$'.toTex() },
+        { 'x': 1.70100, 'label': 'X' }
+    ]
+    // Add the x-axis at bottom of the page
+    svg.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0," + (pumba.height) + ")")
+        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-pumba.height))
+
+    // Add the y-axis.
+    svg.append("g")
+        .attr("class", "y-axis")
+        .attr("transform", "translate(" + 0 + ",0)")
+        .call(d3.axisLeft(y).ticks(5).tickSize(-10));
+
+    var tx = -5;
+    var ty = 10;
+    var tw = 50;
+    var th = 50;
+
+    svg.append("g")
+        .call(x)
+        .selectAll("g").data(hSym).enter().append("foreignObject")
+        .attr('class', 'xTicks')
+        .attr("transform", "translate(0," + (pumba.height) + ")")
+        .attr("width", tw)
+        .attr("height", th)
+        .attr("x", (d) => x(d.x) + tx)
+        .attr("y", ty)
+        .html(function(d) { return d.label })
+
+    svg.append('line')
+        .attr('class', 'zeroline')
+        .attr('x1', x(pumba.x.domain()[0]))
+        .attr('y1', y(0))
+        .attr('x2', x(pumba.x.domain()[1]))
+        .attr('y2', y(0))
+        .style("stroke-dasharray", ("6, 1"))
+
+    // add the x-axis at top of the page
+    svg.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0,-1)")
+        .call(d3.axisTop(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-5))
+
+    // // add the y-axis at right of the page
+    // svg.append("g")
+    //     .attr("class", "y-axis")
+    //     .attr("transform", "translate(" + (pumba.width) + ",0)")
+    //     .call(d3.axisRight(y).ticks(7).tickSize(-5).tickFormat((d) => ''))
+
+    svg.append("foreignObject")
+        .attr("class", 'y-label')
+        .attr("width", 150)
+        .attr("height", 130)
+        .attr("x", (-1 * pumba.height / 1.75))
+        .attr("y", -60)
+        .style("color", 'black')
+        .style('font-size', '16px')
+        .style('text-align', 'left')
+        .style('cursor', 'pointer')
+        .html('$E - E_F$ $(eV)$'.toTex())
+        .attr("transform", "rotate(-90)")
+
+    var data = await d3.csv(style.style[0].file, type)
+    for (i = 0; i < style.style.length; i++) {
+        trace(data, style.style[i])
+        legend(data, style.style[i])
+    }
+}
+
+draw(style)
+
+function trace(data, style) {
+    var xcol = `${data.columns[style.select.x]}`
+    var ycol = `${data.columns[style.select.y]}`
+    var band = d3.nest() // nest based on bandindex
+        .key(function(d) { return d[`${data.columns[0]}`] })
+        .entries(data)
+
+    var line = d3.line().defined(function(d, i) {
+        return +d[ycol] >= pumba.y.domain()[0] && +d[ycol] <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
+    }).x(d => x(+d[xcol])).y(d => y(+d[ycol]))
+
+
+    if (style.line) {
+        if (style.line.smooth) {
+            if (style.line.smooth == 'spline-cat') {
+                line.curve(d3.curveCatmullRom)
+            }
+        }
+        svg.selectAll('band')
+            .data(band).enter().append("path") //slice(39,42)
+            .attr('class', style.name)
+            .attr('stroke', style.line.color) //d => bandColor(style.name)
+            .attr("stroke-width", style.line.width)
+            .attr("opacity", style.line.opacity)
+            .attr("fill", 'none')
+            .attr("d", d => line(d.values));
+    }
+    if (style.dot) {
+        svg.selectAll('dot').data(data.filter(function(d, i) {
+                return d[ycol] >= pumba.y.domain()[0] && d[ycol] <= pumba.y.domain()[1]
+            }))
+            .enter().append('circle')
+            .attr('class', style.name)
+            .attr('id', 'gw')
+            // .on("mouseover", mouseover)
+            // .on("mousemove", mousemove)
+            // .on("mouseleave", mouseleave)
+            .attr('r', style.dot.r)
+            .attr('cx', d => x(d[xcol]))
+            .attr('cy', d => y(d[ycol]))
+            .attr('fill', style.dot.color)
+            // .attr('stroke', style.dot.stroke)
+            // .attr('stroke-width', style.dot.strokeWidth)
+            .attr("opacity", style.dot.opacity);
+    }
+}
+
+function legend(data, style) {
+    if (style.legend) {
+        labelMarker(style.legend.marker, style.legend.x, style.legend.y, style.legend.width)
+        label(style.legend.marker, style.legend.x + style.legend.width + 10, style.legend.y + style.legend.width - 20, style.legend.name)
+    }
+
+    function labelMarker(marker, x, y, r) {
+        if (marker == 'rect') {
+            svg.append("rect")
+                .attr('class', `lm-${style.name}`)
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", r)
+                .attr("height", r)
+                .attr("fill", style.line.color)
+                .attr('opacity', d => style.line.opacity == 0 ? 0.2 : style.line.opacity)
+                .style('cursor', 'pointer')
+                .on("click", function(d) {
+                    currentOpacity = d3.selectAll("." + style.name).style("opacity")
+                    d3.selectAll("." + style.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
+
+                    labelMarkerOpacity = d3.selectAll(`.lm-${style.name}`).style("opacity")
+                    d3.selectAll(`.lm-${style.name}`).transition().style("opacity", labelMarkerOpacity == 1 ? 0.2 : 1)
+
+                })
+        } else if (marker == 'dot') {
+            svg.append("circle")
+                .attr('id', `lm-${style.name}`)
+                .attr("r", (r / 2))
+                .attr("cx", x)
+                .attr("cy", (y + 10))
+                .attr("fill", style.dot.color)
+                .attr('opacity', style.dot.opacity)
+                .style('cursor', 'pointer')
+        }
+    }
+
+
+    // label text
+    function label(marker, x, y, labeltext) {
+        var tLabel = svg.append("foreignObject")
+            .attr("class", `lm-${style.name}`)
+            .attr("width", 150)
+            .attr("height", 30)
+            .attr("x", x)
+            .attr("y", y)
+            .style('font-size', '16px')
+            .style('text-align', 'left')
+            .style('cursor', 'pointer')
+            .html(labeltext)
+            .on("click", function(d) {
+                if (style.orbital) {
+                    currentOpacity = d3.selectAll("#orbital").style("opacity")
+                    d3.selectAll("#orbital").transition().style("opacity", currentOpacity == 0.7 ? 0 : 0.7)
+                }
+            })
+
+        if (marker == 'rect') {
+            tLabel.style("color", style.line.color).style("opacity", style.line.opacity)
+        } else if (marker == 'dot') {
+            tLabel.style("color", style.dot.color).style("opacity", style.dot.opacity)
+        }
+    }
+}
+
+
+// helper functions
+function type(d) {
+    d.k = +d.k;
+    d.e = +d.e;
+    // d.Z11 = +d.Z11;
+    return d;
+}
+var fmt = (a) => d3.format(a)
+</script>

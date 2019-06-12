@@ -1,60 +1,82 @@
-// class Draw {
-//     constructor(canvas) {
-//         this.margin = (canvas.margin) ? canvas.margin : { top: 60, right: 60, bottom: 60, left: 60 }
-//         this.canvasId = (canvas.name) ? `#${canvas.name}` : '#dataviz'
-//         this.width = (canvas.width) ? (canvas.width - this.margin.left - this.margin.right) : (600 - this.margin.left - this.margin.right)
-//         this.height = (canvas.height) ? (canvas.height - this.margin.top - this.margin.bottom) : (600 - this.margin.top - this.margin.bottom)
-//         this.viewWidth = (canvas.view.width) ? (canvas.view.width) : this.width
-//         this.viewHeight = (canvas.view.height) ? (canvas.view.height) : this.height
-//         this.x
-//         this.y
-//     }
-//     plot(description) {
-//         this.svg = d3.select(this.canvasId).append("svg")
-//             .attr('id', 'canvas')
-//             .attr("viewBox", `0 0 ${this.viewWidth} ${this.viewHeight}`)
-//             .attr("preserveAspectRatio", "xMinYMin")
-//             .attr("width", this.viewWidth)
-//             .attr("height", this.viewHeight)
-//             .append("g")
-//             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+<!-- viz -->
+<!DOCTYPE html>
+<link rel="stylesheet" href="../js/katex/katex.css">
+<script src="../js/katex/katex.min.js"></script>
+<script src="../js/d3.v5.min.js"></script>
+<script src="../js/pumbaa.js"></script>
+<div id="dataviz"></div>
+<style>
+svg {
+    display: block;
+    margin: auto;
+    margin-top: 50px;
+}
 
-//         if(description.domain){
-//             var xMin, xMax, yMin, yMax
-//             xMin=0;xMax=1;yMin=0;yMax=1
-//             if (description.domain.x){
-//                 var xDom = description.domain.x
-//             }else{
-//                 var xDom = [xMin,xMax]
-//             }
-//             if (description.domain.y){
-//                  var yDom = description.domain.y
-//             }else{
-//                 var yDom = [ymin,yMax]
-//             }
-//             this.x = d3.scaleLinear().range([0, this.width]).domain(xDom)
-//             this.y = d3.scaleLinear().range([this.height, 0]).domain(yDom)
-//         }
-//         var ifData = this.readData(description)
-//         var test1
-//         ifData.then(function(value) {
-//             test1 = value[0]
-//         })
-//         console.log(test1)
-//         // console.log(ifData)
-//         return this.svg
+/* Band And DOS*/
+.axis {
+    shape-rendering: crispEdges;
+}
 
-//     }
-//     async readData(description) {
-//         var data = new Array()
-//         for (let file of description.file) {
-//             data.push(await d3.csv(file, type))
-//         }
-//         return data
-//     }
-// }
+.tooltip {
+    position: absolute;
+    text-align: center;
+    font: 12px sans-serif;
+    border: 0px;
+    pointer-events: none;
+    font-size: 16px;
+}
 
+#tooltip-left {
+    color: #ffffff;
+    padding: 2px;
+    float: left;
+}
 
+#tooltip-right {
+    float: left;
+    padding: 2px;
+    color: #625F5D;
+    background: hsla(0, 0%, 100%, 0.525);
+    /* opacity: 0.5; */
+}
+
+.x-axis text,
+.y-axis text {
+    font-size: 20px;
+    fill: #625F5D;
+}
+
+.x-axis line,
+.y-axis line {
+    stroke: #625F5D;
+}
+
+.x-axis path,
+.y-axis path {
+    stroke: #BFBFBA;
+    stroke-width: 2px;
+}
+
+.tick line {
+    stroke: #BFBFBA;
+}
+
+.xTicks {
+    color: #625F5D;
+    /*font-size: 20px;*/
+    font: normal 1.30em KaTeX_Main, Times New Roman, serif;
+}
+
+.zeroline {
+    stroke: #BFBFBA;
+    stroke-width: 2px;
+}
+
+.katex {
+    font-size: 1.1em;
+}
+</style>
+<script>
 var canvas = {
     'name': 'dataviz',
     'view': { 'width': 1100, 'height': 650 },
@@ -65,7 +87,7 @@ var canvas = {
 }
 
 var data = {
-    'file': ['viz/band.csv', 'viz/band_test.csv'],
+    'file': ['band.csv', 'band_test.csv'],
     'select': {'x':1, 'y':2}, //colums as x axis and y axis
     'scale': 'linear',
     // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
@@ -86,7 +108,7 @@ var style={
                 'color': 'red'
             },
             'dos': {
-                'file':'viz/dos_MAPI.csv',
+                'file':'dos_MAPI.csv',
                 'cols': [1, 2, 5, 6, 7, 13, 14],
                 'color': ['rgba(221, 221, 221, 0.4)', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
                 'opacity':0
@@ -124,7 +146,7 @@ var style={
             },
             'orbital': false,
             'dos': {
-                'file':'viz/dos_PI.csv',
+                'file':'dos_PI.csv',
                 'cols': [1],
                 'color': ['rgba(221, 221, 221, 0.4)'],
                 'opacity':1
@@ -134,7 +156,7 @@ var style={
 
 }
 
-resize("#canvas")
+// resize("#canvas")
 pumba = new Draw(canvas)
 svg = pumba.plot(data)
 var x = pumba.x
@@ -145,8 +167,8 @@ var y = pumba.y
  * @return {svg} 
  */
 const draw = async function() {
-    var MAPI = await d3.csv("viz/band.csv", type)
-    var PI = await d3.csv("viz/band_PI.csv", type)
+    var MAPI = await d3.csv("band.csv", type)
+    var PI = await d3.csv("band_PI.csv", type)
 
     // kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
     // kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
@@ -492,34 +514,4 @@ function type_dos(d) {
 }
 
 var fmt = (a) => d3.format(a)
-// create a tooltip
-// var Tooltip = d3.select("#dataviz")
-//     .append("div")
-//     .style("opacity", 0)
-//     .attr("class", "tooltip")
-
-// // Three function that change the tooltip when user hover / move / leave a cell
-// var mouseover = function(d) {
-//     Tooltip.style("opacity", 1)
-//     d3.select(this)
-//         .attr('r', 6)
-// }
-
-// var mousemove = function(d) {
-//     bgColor = d3.select(this).attr("fill")
-//     symbol = d3.select(this).attr("id") //'MAPI'
-//     Tooltip.attr("alignment-baseline", "middle")
-//         .html(
-//             `<div id='tooltip-left' style="background:${bgColor}">` +
-//             fmt(".2f")(d.e) +
-//             `</div><div id='tooltip-right' style="color:${bgColor}">` +
-//             symbol + `</div>`
-//         )
-//         .style("left", (d3.mouse(this)[0] + 40) + "px")
-//         .style("top", (d3.mouse(this)[1] + 60) + "px")
-// }
-
-// var mouseleave = function(d) {
-//     Tooltip.style("opacity", 0)
-//     d3.select(this).attr('r', 2)
-// }
+</script>
