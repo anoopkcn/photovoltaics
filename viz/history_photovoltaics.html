@@ -6,6 +6,11 @@
 <script src="../js/pumbaa.js"></script>
 <div id="dataviz"></div>
 <style>
+svg {
+    display: block;
+    margin: auto;
+    /*margin-top: 50px;*/
+}
 path.area {
   fill: #e7e7e7;
 }
@@ -57,12 +62,12 @@ svg circle{
 </style>
 
 <script>
-var margin = {top: 80, right: 80, bottom: 80, left: 80},
-    width = 1100 - margin.left - margin.right,
+var margin = {top: 60, right: 60, bottom: 60, left: 60},
+    width = 1000 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 //time duration for the transition
-// var duration = 10000; //presentation 50000
-var duration = 1000; //test
+var duration = 50000; //presentation 50000
+// var duration = 1000; //test
 // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
 var x = d3.scaleTime().range([0, width]),
     y = d3.scaleLinear().range([height, 0]);
@@ -116,6 +121,8 @@ function draw(data){
 
   // Add an SVG element with the desired dimensions and margin.
   var svg = d3.select("#dataviz").append("svg")
+      .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+      .attr("preserveAspectRatio", "xMinYMin")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")

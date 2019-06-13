@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/theme/white.css">
     <link rel="stylesheet" href="css/slides/styles.css">
+    <link rel="stylesheet" href="css/slides/dft.css">
     <link rel="stylesheet" href="lib/css/monokai.css">
-    <link rel="stylesheet" href="css/slides/viz_styles.css">
     <link rel="stylesheet" href="js/katex/katex.css">
     <link rel="stylesheet" href="css/slides/bands.css">
 	<script src="js/katex/katex.min.js"></script>
@@ -30,8 +30,11 @@
         <div class="slides">
             <!-- SLIDE #1 -->
             <section>
-                <p style="color:#8E8883">Materials Search</p>
+                <p><span style="color:#4876B1">High-throughput</span> <span style="color:#8E8883">Materials Search</span></p>
                 <p>Metal - Halide Perovskites for photovoltaic applications</p>
+                <br><br>
+                <p style="font-size:28px"><b>Anoop Chandran</b></p>
+                <p style="font-size:28px">Peter Grünberg Institut, Forschungszentrum Jülich and JARA, 52425 Jülich, Germany</p>
             </section>
             <!-- SLIDE #2 -->
             <section>
@@ -42,22 +45,95 @@
                     <div class="viz">
                         <div class="fig-container" data-file="viz/history_photovoltaics.html" data-preload></div>
                     </div>
+<!--                     <div class="references">
+                        <span style="color:#4876B1">[ 1 ]</span> www.nrel.gov/pv [ 2 ]</span> W. Shockley and H. J. Queisser, <i>J. Appl. Phys.</i>, 1961, 32, 510–519.<span style="color:#4876B1">[ 2 ]</span> A. M. Ganose,C. N. Savorya and D. O. Scanlon, <i>Chem. Commun.</i>, 2017, 53, 20
+                    </div> -->
                 </div>
             </section>
             <section>
-                material properties
+                <div class="content">
+                    <div class="content-heading">
+                            Desired solar absorber properties
+                    </div>
+                    <div class="cards">
+                        <div class="cell00">
+                            <div class="subtitle">
+                                Band Gap
+                            </div>
+                            <div class="celltext">
+                                Determins the maximum theoretical power conversion effiencies(PCE). Best performace within <span style="color:#5C9A2E">1.10-1.50 eV</span> range
+                            </div>
+                        </div>
+                        <div class="cell01">
+                            <div class="subtitle">
+                                Optical absorption
+                            </div>
+                            <div class="celltext">
+                                High absorbance due to <span style="color:#5C9A2E">direct bandgap</span>
+                            </div>
+                        </div>
+                        <div class="cell10">
+                            <div class="subtitle">
+                                Charge Carrier Effective Mass
+                            </div>
+                            <div class="celltext">
+                                High charge carrier mobilities , <span style="color:#5C9A2E">$\mu$</span>,  can improve device performance.
+                            </div>
+                        </div>
+                        <div class="cell11">
+                            <div class="subtitle">
+                                Defect tolerance
+                            </div>
+                            <div class="celltext">
+                                The ability of semiconductors to retain the optoelectronic properties (i.e PCE), regardless of the presence of defects.
+                            </div>
+                        </div>
+                        <div class="cell20">
+                            <div class="subtitle">
+                                Rashba Splitting
+                            </div>
+                            <div class="celltext">
+                                Reduce the radiative recombination.
+                            </div>
+                        </div>
+                        <div class="cell21">
+                            <div class="subtitle">
+                                Alignment
+                            </div>
+                            <div class="celltext">
+                                During hetrojunction cell construction,...whatever
+                            </div>
+                        </div>
+                    </div>
+                   <!--  <div class="references">
+                        <span style="color:#4876B1">[ 1 ]</span> A. M. Ganose,C. N. Savorya and D. O. Scanlon, <i>Chem. Commun.</i>, 2017, 53, 20 <span style="color:#4876B1">[ 2 ]</span> W. Shockley and H. J. Queisser, <i>J. Appl. Phys.</i>, 1961, 32, 510–519.
+                    </div> -->
+                </div>
             </section>
             <section>
-                lattice picture
+                <div class="content">
+                    <div class="content-heading">
+                           <span style="color:#984EA4">$C$</span><span style="color:#F782BF">$H_3$</span><span style="color:#FE7F00">$N$</span><span style="color:#F782BF">$H_3$</span><span style="color:#4DAF4A">$Pb$</span><span style="color:#E41B1B">$I_3$</span> ( MAPI )
+                    </div>
+                    <img src="viz/images/CH3NH3PbI3.png" alt="">
+                    <img src="viz/images/CH3NH3PbI3_top.png" alt="">
+                </div>
             </section>
             <section>
                 <div class="content">
                     <div class="viz">
-                        <div class="fig-container" data-file="viz/dft.html" data-preload></div>
-                        <!-- <div id="dataviz"></div> -->
+                        <div id="dataviz"></div>
+                        <!-- <div class="fig-container" data-file="viz/dft.html" data-preload></div> -->
                     </div>
                 </div>
             </section>
+  <!--           <section>
+                <div class="content">
+                    <div class="viz">
+                        <div class="fig-container" data-file="viz/dftsoc.html" data-preload></div>
+                    </div>
+                </div>
+            </section> -->
             <!-- SLIDE #4 -->
             <section>
                 <div class="content">
@@ -76,10 +152,26 @@
             </section>
             <section>
                 <div class="content">
-                    $G^{soc}W^{soc}$
+                    $G^{soc}W^{soc}$ (DRAFT)
+                </div>
+            </section>
+            <section>
+                <div class="content">
+                    <img src="viz/images/band_shift.svg" width='1200px' alt="">
+                </div>
+            </section>
+            <section>
+                <div class="content">
+                    high-throughput (DRAFT)
+                </div>
+            </section>
+            <section>
+                <div class="content">
+                    Final Slide (DRAFT)
                 </div>
             </section>
         </div>
+    <div class="watermark"><img src="css/logo.png" width='180px' alt=""></div>
     </div>
     <script src="js/reveal.js"></script>
     <script>
@@ -87,6 +179,7 @@
     // - https://github.com/hakimel/reveal.js#configuration
     // - https://github.com/hakimel/reveal.js#dependencies
     Reveal.initialize({
+        controls: false,
         progress: false,
         navigationMode: 'linear',
         transition: 'none', // none/fade/slide/convex/concave/zoom
@@ -115,7 +208,7 @@
     </script>
     <!-- viz scripts -->
     <script src="js/pumbaa.js"></script>
-    <!-- <script src="js/banddos.js"></script> -->
+    <script src="js/dft.js"></script>
 </body>
 
 </html>

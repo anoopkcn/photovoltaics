@@ -4,7 +4,7 @@
 <script src="../js/katex/katex.min.js"></script>
 <script src="../js/d3.v5.min.js"></script>
 <script src="../js/pumbaa.js"></script>
-<div id="compression"></div>
+<div id="dftsoc"></div>
 <style>
 svg {
     display: block;
@@ -78,7 +78,7 @@ svg {
 </style>
 <script>
 var canvas = {
-    'name': 'compression',
+    'name': 'dftsoc',
     'view': { 'width': 1000, 'height': 650 },
     'width': 1000,
     'height': 650,
@@ -97,7 +97,7 @@ var data = {
 var style = {
     'style': [{
             'name': 'MAPIKS',
-            'file': "gw/spexband.csv",
+            'file': "band_MAPI.csv",
             'select': { 'x': 1, 'y': 2 },
             'line': {
                 'color': '#1f78b4',
@@ -106,7 +106,7 @@ var style = {
                 'opacity': 1
             },
             'legend': {
-                'name': '$CH_3NH_3PbI_3$ - DFT'.toTex(),
+                'name': 'MAPI - DFT',
                 'marker': 'rect',
                 'x': 0,
                 'y': -30,
@@ -114,26 +114,26 @@ var style = {
             },
         },
         {
-            'name': 'MAPIGW',
-            'file': "gw/spexband.csv",
-            'select': { 'x': 1, 'y': 3 },
-            'dot': {
-                'color': '#E48733',
-                'r': 2.5,
-                'opacity': 1,
-                'stroke': '#ffffff',
-                'strokeWidth': 3
-            },
-            // 'line': {
+            'name': 'MAPISOC',
+            'file': "band_dftsoc.csv",
+            'select': { 'x': 1, 'y': 2 },
+            // 'dot': {
             //     'color': '#E48733',
-            //     'smooth': 'spline-cat',
-            //     'width': 3,
-            //     'opacity': 0
+            //     'r': 2.5,
+            //     'opacity': 1,
+            //     'stroke': '#ffffff',
+            //     'strokeWidth': 3
             // },
+            'line': {
+                'color': '#E48733',
+                // 'smooth': 'spline-cat',
+                'width': 3,
+                'opacity': 1
+            },
             'legend': {
-                'name': '$CH_3NH_3PbI_3$ - GW'.toTex(),
-                'marker': 'dot',
-                'x': 250,
+                'name': 'MAPI - GW',
+                'marker': 'rect',
+                'x': 200,
                 'y': -30,
                 'width': 20,
             },
@@ -224,8 +224,9 @@ const draw = async function(style) {
         .html('$E - E_F$ $(eV)$'.toTex())
         .attr("transform", "rotate(-90)")
 
-    var data = await d3.csv(style.style[0].file, type)
+   
     for (i = 0; i < style.style.length; i++) {
+        var data = await d3.csv(style.style[i].file, type)
         trace(data, style.style[i])
         legend(data, style.style[i])
     }
@@ -267,6 +268,9 @@ function trace(data, style) {
             .enter().append('circle')
             .attr('class', style.name)
             .attr('id', 'gw')
+            // .on("mouseover", mouseover)
+            // .on("mousemove", mousemove)
+            // .on("mouseleave", mouseleave)
             .attr('r', style.dot.r)
             .attr('cx', d => x(d[xcol]))
             .attr('cy', d => y(d[ycol]))
@@ -311,14 +315,6 @@ function legend(data, style) {
                 .attr("fill", style.dot.color)
                 .attr('opacity', style.dot.opacity)
                 .style('cursor', 'pointer')
-                .on("click", function(d) {
-                    currentOpacity = d3.selectAll("." + style.name).style("opacity")
-                    d3.selectAll("." + style.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
-
-                    labelMarkerOpacity = d3.selectAll(`.lm-${style.name}`).style("opacity")
-                    d3.selectAll(`.lm-${style.name}`).transition().style("opacity", labelMarkerOpacity == 1 ? 0.2 : 1)
-
-                })
         }
     }
 
@@ -327,7 +323,7 @@ function legend(data, style) {
     function label(marker, x, y, labeltext) {
         var tLabel = svg.append("foreignObject")
             .attr("class", `lm-${style.name}`)
-            .attr("width", 250)
+            .attr("width", 150)
             .attr("height", 30)
             .attr("x", x)
             .attr("y", y)

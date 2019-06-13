@@ -64,7 +64,7 @@ svg {
 .xTicks {
     color: #625F5D;
     /*font-size: 20px;*/
-    font: normal 1.30em KaTeX_Main, Times New Roman, serif;
+    font: normal 1.40em KaTeX_Main, Times New Roman, serif;
 }
 
 .zeroline {
@@ -91,20 +91,20 @@ var data = {
     'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
     'scale': 'linear',
     // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
-    'domain': { 'x': [0, 1.09068], 'y': [-4, 5] }
+    'domain': { 'x': [0, 0.82763], 'y': [-4, 5] }
 }
 
 var style = {
     'style': [{
             'name': 'MAPI0',
-            'file': "compression/band_0_94.csv",
+            'file': "compression/band_1_06.csv",
             'line': {
-                'color': '#1a6699',
+                'color': '#d3e9f8',
                 'width': 4,
                 'opacity': 1
             },
             'legend': {
-                'name': '0.94',
+                'name': '1.06',
                 'marker': 'rect',
                 'x': 0,
                 'y': -30,
@@ -113,17 +113,17 @@ var style = {
         },
         {
             'name': 'MAPI1',
-            'file': "compression/band_0_96.csv",
+            'file': "compression/band_1_04.csv",
             'line': {
-                'color': '#1f78b4',
+                'color': '#a8d3f0',
                 'width': 4,
-                'opacity': 1,
+                'opacity': 0,
             },
             'marker': {
                 'color': 'red'
             },
             'legend': {
-                'name': '0.96',
+                'name': '1.04',
                 'marker': 'rect',
                 'x': 100,
                 'y': -30,
@@ -132,17 +132,17 @@ var style = {
         },
         {
             'name': 'MAPI2',
-            'file': "compression/band_0_98.csv",
+            'file': "compression/band_1_02.csv",
             'line': {
-                'color': '#2592da',
+                'color': '#7cbde9',
                 'width': 4,
-                'opacity': 1,
+                'opacity': 0,
             },
             'marker': {
                 'color': 'red'
             },
             'legend': {
-                'name': '0.98',
+                'name': '1.02',
                 'marker': 'rect',
                 'x': 200,
                 'y': -30,
@@ -155,7 +155,7 @@ var style = {
             'line': {
                 'color': '#51a7e1',
                 'width': 4,
-                'opacity': 1,
+                'opacity': 0,
             },
             'marker': {
                 'color': 'red'
@@ -170,17 +170,17 @@ var style = {
         },
         {
             'name': 'MAPI4',
-            'file': "compression/band_1_02.csv",
+            'file': "compression/band_0_98.csv",
             'line': {
-                'color': '#7cbde9',
+                'color': '#2592da',
                 'width': 4,
-                'opacity': 1,
+                'opacity': 0,
             },
             'marker': {
                 'color': 'red'
             },
             'legend': {
-                'name': '1.02',
+                'name': '0.98',
                 'marker': 'rect',
                 'x': 400,
                 'y': -30,
@@ -189,17 +189,17 @@ var style = {
         },
         {
             'name': 'MAPI5',
-            'file': "compression/band_1_04.csv",
+            'file': "compression/band_0_96.csv",
             'line': {
-                'color': '#a8d3f0',
+                'color': '#1f78b4',
                 'width': 4,
-                'opacity': 1,
+                'opacity': 0,
             },
             'marker': {
                 'color': 'red'
             },
             'legend': {
-                'name': '1.04',
+                'name': '0.96',
                 'marker': 'rect',
                 'x': 500,
                 'y': -30,
@@ -208,17 +208,17 @@ var style = {
         },
         {
             'name': 'MAPI6',
-            'file': "compression/band_1_06.csv",
+            'file': "compression/band_0_94.csv",
             'line': {
-                'color': '#d3e9f8',
+                'color': '#1a6699',
                 'width': 4,
-                'opacity': 1,
+                'opacity': 0,
             },
             'marker': {
                 'color': 'red'
             },
             'legend': {
-                'name': '1.06',
+                'name': '0.94',
                 'marker': 'rect',
                 'x': 600,
                 'y': -30,
@@ -332,7 +332,7 @@ function trace(data, style) {
 
     if (style.line) {
         svg.selectAll('band')
-            .data(band.slice(38, 42)).enter().append("path") //slice(39,42)
+            .data(band.slice(37, 43)).enter().append("path") //slice(39,42)
             .attr('class', style.name)
             .attr('stroke', style.line.color) //d => bandColor(style.name)
             .attr("stroke-width", style.line.width)

@@ -1,82 +1,3 @@
-<!-- viz -->
-<!DOCTYPE html>
-<link rel="stylesheet" href="../js/katex/katex.css">
-<script src="../js/katex/katex.min.js"></script>
-<script src="../js/d3.v5.min.js"></script>
-<script src="../js/pumbaa.js"></script>
-<div id="dataviz"></div>
-<style>
-svg {
-    display: block;
-    margin: auto;
-    /*margin-top: 50px;*/
-}
-
-/* Band And DOS*/
-.axis {
-    shape-rendering: crispEdges;
-}
-
-.tooltip {
-    position: absolute;
-    text-align: center;
-    font: 12px sans-serif;
-    border: 0px;
-    pointer-events: none;
-    font-size: 16px;
-}
-
-#tooltip-left {
-    color: #ffffff;
-    padding: 2px;
-    float: left;
-}
-
-#tooltip-right {
-    float: left;
-    padding: 2px;
-    color: #625F5D;
-    background: hsla(0, 0%, 100%, 0.525);
-    /* opacity: 0.5; */
-}
-
-.x-axis text,
-.y-axis text {
-    font-size: 20px;
-    fill: #625F5D;
-}
-
-.x-axis line,
-.y-axis line {
-    stroke: #625F5D;
-}
-
-.x-axis path,
-.y-axis path {
-    stroke: #BFBFBA;
-    stroke-width: 2px;
-}
-
-.tick line {
-    stroke: #BFBFBA;
-}
-
-.xTicks {
-    color: #625F5D;
-    /*font-size: 20px;*/
-    font: normal 1.30em KaTeX_Main, Times New Roman, serif;
-}
-
-.zeroline {
-    stroke: #BFBFBA;
-    stroke-width: 2px;
-}
-
-.katex {
-    font-size: 1.1em;
-}
-</style>
-<script>
 var canvas = {
     'name': 'dataviz',
     'view': { 'width': 1100, 'height': 650 },
@@ -108,7 +29,7 @@ var style={
                 'color': 'red'
             },
             'dos': {
-                'file':'dos_MAPI.csv',
+                'file':'viz/dos_MAPI.csv',
                 'cols': [1, 2, 5, 6, 7, 13, 14],
                 'color': ['rgba(221, 221, 221, 0.4)', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
                 'opacity':0
@@ -146,7 +67,7 @@ var style={
             },
             'orbital': false,
             'dos': {
-                'file':'dos_PI.csv',
+                'file':'viz/dos_PI.csv',
                 'cols': [1],
                 'color': ['rgba(221, 221, 221, 0.4)'],
                 'opacity':1
@@ -167,8 +88,8 @@ var y = pumba.y
  * @return {svg} 
  */
 const draw = async function() {
-    var MAPI = await d3.csv("band_MAPI.csv", type)
-    var PI = await d3.csv("band_PI.csv", type)
+    var MAPI = await d3.csv("viz/band_MAPI.csv", type)
+    var PI = await d3.csv("viz/band_PI.csv", type)
 
     // kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
     // kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
@@ -195,7 +116,7 @@ const draw = async function() {
         .attr("transform", "translate(" + 0 + ",0)")
         .call(d3.axisLeft(y).ticks(7).tickSize(-10));
 
-    var tx = -5;
+    var tx = -25;
     var ty = 10;
     var tw = 50;
     var th = 50;
@@ -514,4 +435,3 @@ function type_dos(d) {
 }
 
 var fmt = (a) => d3.format(a)
-</script>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="100%" height="100%" viewBox="34.835 98.371 1020.038 501.861" version="1.1" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;" xmlns="http://www.w3.org/2000/svg">
+  <rect x="43.64" y="145.817" width="578.292" height="444.743" style="fill:none;stroke:#7e7171;stroke-width:1px;"/>
+  <rect x="653.703" y="146.049" width="389.771" height="444.629" style="fill:none;stroke:#ccc;stroke-width:1px;"/>
+  <path d="M188.291,588.715c0,-57.314 -30.66,-103.846 -68.425,-103.846c-37.764,0 -68.424,46.532 -68.424,103.846" style="fill:none;stroke:#4876b1;stroke-width:3px;"/>
+  <path d="M189.251,307.623c0,57.314 -30.66,103.845 -68.425,103.845c-37.764,0 -68.424,-46.531 -68.424,-103.845" style="fill:none;stroke:#4876b1;stroke-opacity:0.83;stroke-width:3px;"/>
+  <path d="M345.957,589.7c0,-57.314 -30.66,-103.845 -68.425,-103.845c-37.764,0 -68.424,46.531 -68.424,103.845" style="fill:none;stroke:#688ebe;stroke-opacity:0.83;stroke-width:3px;"/>
+  <path d="M346.671,350.636c0,57.314 -30.66,103.846 -68.425,103.846c-37.764,0 -68.424,-46.532 -68.424,-103.846" style="fill:none;stroke:#688ebe;stroke-opacity:0.83;stroke-width:3px;"/>
+  <path d="M476.338,589.397c0,-57.314 -24.334,-103.845 -54.307,-103.845c-29.973,0 -54.307,46.531 -54.307,103.845" style="fill:none;stroke:#5c9a2e;stroke-opacity:0.83;stroke-width:4px;"/>
+  <path d="M481.059,182.141c0,72.598 -25.504,131.539 -56.919,131.539c-31.415,0 -56.919,-58.941 -56.919,-131.539" style="fill:none;stroke:#5c9a2e;stroke-width:4px;"/>
+  <path d="M606.015,587.151c0,-57.314 -24.335,-103.845 -54.308,-103.845c-29.972,0 -54.307,46.531 -54.307,103.845" style="fill:none;stroke:#e27f27;stroke-width:4px;"/>
+  <path d="M609.766,288.136c0,72.599 -25.505,131.539 -56.919,131.539c-31.415,0 -56.92,-58.94 -56.92,-131.539" style="fill:none;stroke:#e27f27;stroke-width:4px;"/>
+  <text x="97.74px" y="584.924px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">GGA</text>
+  <text x="134.314px" y="455.353px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">x e<tspan x="161.116px " y="455.353px ">V</tspan></text>
+  <text x="300.008px" y="482.717px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">x e<tspan x="326.81px " y="482.717px ">V</tspan></text>
+  <text x="432.788px" y="405.862px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">x e<tspan x="459.59px " y="405.862px ">V</tspan></text>
+  <text x="563.123px" y="462.409px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">x e<tspan x="589.925px " y="462.409px ">V</tspan></text>
+  <text x="232.11px" y="585.14px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">GGA<tspan x="273.24px 283.77px " y="585.14px 585.14px ">+S</tspan>OC</text>
+  <g>
+    <text x="680.992px" y="252.745px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">MA [ 0 0 1 ]</text>
+    <text x="681.622px" y="297.313px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">MA [ 0 1 1 ]</text>
+    <text x="684.03px" y="342.471px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">MA [ 1 1 1 ]</text>
+  </g>
+  <g>
+    <text x="681.118px" y="466.759px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">MA [ 0 0 1 ]</text>
+    <text x="681.748px" y="511.326px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">MA [ 0 1 1 ]</text>
+    <text x="684.156px" y="556.484px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">MA [ 1 1 1 ]</text>
+  </g>
+  <text x="406.864px" y="585.816px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(92, 154, 46); white-space: pre;">GW</text>
+  <text x="510.385px" y="585.201px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(226, 127, 39); white-space: pre;">GW<tspan x="544.729px 555.259px " y="585.201px 585.201px ">+S</tspan>OC</text>
+  <path d="M118.916,417.867l-2.829,0.051l3.267,-3.388l3.389,3.267l-2.829,0.051l1.107,60.902l2.829,-0.051l-3.267,3.388l-3.389,-3.267l2.829,-0.052l-1.107,-60.901Z" style="fill:none;stroke:#688ebe;stroke-width:2px;"/>
+  <path d="M276.121,461.525l-2.829,0.052l3.267,-3.389l3.389,3.268l-2.829,0.051l0.318,17.487l2.828,-0.051l-3.267,3.388l-3.388,-3.267l2.828,-0.052l-0.317,-17.487Z" style="fill:none;stroke:#688ebe;stroke-width:2px;"/>
+  <path d="M419.852,331.406l-2.829,0.052l3.267,-3.388l3.389,3.267l-2.829,0.051l2.6,143.008l2.828,-0.052l-3.267,3.389l-3.388,-3.268l2.828,-0.051l-2.599,-143.008Z" style="fill:none;stroke:#688ebe;stroke-width:2px;"/>
+  <path d="M546.714,429.61l-2.829,0.051l3.267,-3.388l3.389,3.267l-2.829,0.051l0.823,45.291l2.829,-0.052l-3.267,3.388l-3.389,-3.267l2.829,-0.051l-0.823,-45.29Z" style="fill:none;stroke:#688ebe;stroke-width:2px;"/>
+  <text x="179.616px" y="126.733px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 24px; fill: rgb(70, 69, 69); white-space: pre;">E<tspan x="195.6px 209.592px " y="126.733px 126.733px ">vo</tspan>lution of Ban<tspan x="387.48px " y="126.733px ">d</tspan> Gap</text>
+  <text x="775.263px" y="128.963px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 24px; fill: rgb(70, 69, 69); white-space: pre;">Eff<tspan x="809.775px 824.919px 839.295px " y="128.963px 128.963px 128.963px ">ect</tspan> of MA</text>
+  <rect x="653.227" y="145.284" width="390.291" height="57.89" style="fill:#678dbc;fill-opacity:0.35;"/>
+  <rect x="653.561" y="368.3" width="390.291" height="57.89" style="fill:#678dbc;fill-opacity:0.35;"/>
+  <path d="M847.247,207.436l0,156.283" style="fill:none;stroke:#688ebe;stroke-opacity:0.39;stroke-width:2px;"/>
+  <path d="M848.355,430.577l0,156.283" style="fill:none;stroke:#688ebe;stroke-opacity:0.39;stroke-width:2px;"/>
+  <text x="811.953px" y="181.702px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 24px; fill: rgb(70, 69, 69); white-space: pre;">C<tspan x="829.209px " y="181.702px ">u</tspan>bic</text>
+  <text x="778.929px" y="403.357px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 24px; fill: rgb(70, 69, 69); white-space: pre;">T<tspan x="792.441px " y="403.357px ">e</tspan>tr<tspan x="828.201px 843.153px " y="403.357px 403.357px ">ag</tspan>onal</text>
+  <g>
+    <text x="902.444px" y="248.676px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">1.54 e<tspan x="953.42px " y="248.676px ">V</tspan></text>
+    <text x="903.164px" y="293.244px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">1.51 e<tspan x="948.794px " y="293.244px ">V</tspan></text>
+    <text x="900.469px" y="338.402px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">1.4<tspan x="923.887px " y="338.402px ">7</tspan> e<tspan x="951.139px " y="338.402px ">V</tspan></text>
+  </g>
+  <g>
+    <text x="905.451px" y="464.419px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">1.<tspan x="916.989px " y="464.419px ">6</tspan>8 e<tspan x="956.427px " y="464.419px ">V</tspan></text>
+    <text x="904.065px" y="508.987px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">1.<tspan x="915.549px 926.349px " y="508.987px 508.987px ">76</tspan> e<tspan x="953.907px " y="508.987px ">V</tspan></text>
+    <text x="903.89px" y="554.145px" style="font-family: Montserrat-Bold, Montserrat; font-weight: 700; font-size: 18px; fill: rgb(104, 142, 190); white-space: pre;">1.<tspan x="915.374px 926.174px " y="554.145px 554.145px ">76</tspan> e<tspan x="953.732px " y="554.145px ">V</tspan></text>
+  </g>
+</svg>
