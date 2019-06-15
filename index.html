@@ -30,11 +30,13 @@
         <div class="slides">
             <!-- SLIDE #1 -->
             <section>
+                <div class="content" style="margin-top:250px">
                 <p><span style="color:#4876B1">High-throughput</span> <span style="color:#8E8883">Materials Search</span></p>
                 <p>Metal - Halide Perovskites for photovoltaic applications</p>
                 <br><br>
                 <p style="font-size:28px"><b>Anoop Chandran</b></p>
                 <p style="font-size:28px">Peter Grünberg Institut, Forschungszentrum Jülich and JARA, 52425 Jülich, Germany</p>
+                </div>
             </section>
             <!-- SLIDE #2 -->
             <section>
@@ -43,11 +45,15 @@
                         Motivation - Research-Cell Efficiency
                     </div>
                     <div class="viz">
-                        <div class="fig-container" data-file="viz/history_photovoltaics.html" data-preload></div>
+                        <div class="fig-container" 
+                        data-file="viz/history_photovoltaics.html"
+                        data-style="height: 700px"
+                        data-preload></div>
                     </div>
-<!--                     <div class="references">
-                        <span style="color:#4876B1">[ 1 ]</span> www.nrel.gov/pv [ 2 ]</span> W. Shockley and H. J. Queisser, <i>J. Appl. Phys.</i>, 1961, 32, 510–519.<span style="color:#4876B1">[ 2 ]</span> A. M. Ganose,C. N. Savorya and D. O. Scanlon, <i>Chem. Commun.</i>, 2017, 53, 20
-                    </div> -->
+                    <div class="references">
+                        <span style="color:#4876B1">[ 1 ]</span> www.nrel.gov/pv  <br>
+                        <span style="color:#4876B1">[ 3 ]</span> A. M. Ganose,C. N. Savorya and D. O. Scanlon, <i>Chem. Commun.</i>, 2017, 53, 20
+                    </div>
                 </div>
             </section>
             <section>
@@ -105,22 +111,28 @@
                             </div>
                         </div>
                     </div>
-                   <!--  <div class="references">
-                        <span style="color:#4876B1">[ 1 ]</span> A. M. Ganose,C. N. Savorya and D. O. Scanlon, <i>Chem. Commun.</i>, 2017, 53, 20 <span style="color:#4876B1">[ 2 ]</span> W. Shockley and H. J. Queisser, <i>J. Appl. Phys.</i>, 1961, 32, 510–519.
-                    </div> -->
+                    <div class="references">
+                        <span style="color:#4876B1">[ 1 ]</span> A. M. Ganose,C. N. Savorya and D. O. Scanlon, <i>Chem. Commun.</i>, 2017, 53, 20 <br>
+                        <span style="color:#4876B1">[ 2 ]</span> W. Shockley and H. J. Queisser, <i>J. Appl. Phys.</i>, 1961, 32, 510–519.
+                    </div>
                 </div>
             </section>
             <section>
                 <div class="content">
                     <div class="content-heading">
-                           <span style="color:#984EA4">$C$</span><span style="color:#F782BF">$H_3$</span><span style="color:#FE7F00">$N$</span><span style="color:#F782BF">$H_3$</span><span style="color:#4DAF4A">$Pb$</span><span style="color:#E41B1B">$I_3$</span> ( MAPI )
+                        Methylammonium Lead Iodide (MAPI)<br><br>
+                           <span style="color:#984EA4">$C$</span><span style="color:#F782BF">$H_3$</span><span style="color:#FE7F00">$N$</span><span style="color:#F782BF">$H_3$</span><span style="color:#4DAF4A">$Pb$</span><span style="color:#E41B1B">$I_3$</span> 
+                           <!-- => <span style="color:#984EA4">$C$</span><span style="color:#F782BF">$H_3$</span><span style="color:#FE7F00">$N$</span><span style="color:#F782BF">$H_3^+$ + </span><span style="color:#4DAF4A">$Pb$</span><span style="color:#E41B1B">$I_3^-$</span> -->
                     </div>
-                    <img src="viz/images/CH3NH3PbI3.png" alt="">
-                    <img src="viz/images/CH3NH3PbI3_top.png" alt="">
+                    <img src="viz/images/MAPI_cubic.png" width="500px" alt="">
+                    <img src="viz/images/MAPI_cubic_top.png" width="500px" alt="">
                 </div>
             </section>
             <section>
                 <div class="content">
+                    <div class="content-heading">
+                            DFT - band structure
+                    </div>
                     <div class="viz">
                         <div id="dataviz"></div>
                         <!-- <div class="fig-container" data-file="viz/dft.html" data-preload></div> -->
@@ -137,37 +149,76 @@
             <!-- SLIDE #4 -->
             <section>
                 <div class="content">
-                    <div class="viz">
-                        <div class="fig-container" data-file="viz/compression.html" data-preload></div>
+                    <div class="content-heading">
+                           defect tolarance
+                         </div>
+                    <div class="references">
+                         <span style="color:#4876B1">[ 1 ]</span><i> Between Structure and Performance in Halide Perovskites for Photovoltaic Applications: the Role of Defects</i> by Yevgeny Rakita (￼September 2018)<br>
+                        <span style="color:#4876B1">[ 2 ]</span> R. E. Brandt,J. R. Poindexter, P. Gorai, et al <i>Chem. Mater. </i>2017, 29, 4667−4674
                     </div>
                 </div>
             </section>
             <section>
                 <div class="content">
+                    <div class="content-heading">
+                           Compression
+                    </div>
                     <div class="viz">
-                        <div class="fig-container" data-file="viz/dftgw.html" data-preload></div>
+                        <div class="fig-container" 
+                        data-file="viz/compression.html" 
+                        data-style="height: 700px" 
+                        data-preload></div>
+                        <!-- <div id="compression"></div> -->
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="content">
+                    <div class="content-heading">
+                           DFT and GW bang structures
+                    </div>
+                    <div class="viz">
+                        <div class="fig-container" 
+                        data-file="viz/dftgw.html" 
+                        data-style="height: 700px" 
+                        data-preload></div>
                         <!-- <div id="dataviz"></div> -->
                     </div>
                 </div>
             </section>
             <section>
                 <div class="content">
-                    $G^{soc}W^{soc}$ (DRAFT)
+                    <div class="content-heading">
+                            $G^{soc}W^{soc}$ (DRAFT)
+                    </div>
+                   
                 </div>
             </section>
             <section>
                 <div class="content">
+                    <div class="content-heading">
+                        Band gap so far
+                    </div> 
                     <img src="viz/images/band_shift.svg" width='1200px' alt="">
+                    <div class="references">
+                        <span style="color:#4876B1">[ 1 ]</span> W. Gao, X. Gao, T. A. Abtew,1 Y Sun, S. Zhang,3 and P. Zhang, <i>Phy. Rev B </i>93, 085202 (2016)
+                    </div>
                 </div>
             </section>
             <section>
                 <div class="content">
-                    high-throughput (DRAFT)
+                    <div class="content-heading">
+                            high-throughput (DRAFT)
+                    </div>
+                   
+                    
                 </div>
             </section>
             <section>
                 <div class="content">
-                    Final Slide (DRAFT)
+                     <div class="content-heading">
+                        Final Slide (DRAFT)
+                    </div>  
                 </div>
             </section>
         </div>
@@ -209,6 +260,7 @@
     <!-- viz scripts -->
     <script src="js/pumbaa.js"></script>
     <script src="js/dft.js"></script>
+    <!-- <script src="js/compression.js"></script> -->
 </body>
 
 </html>

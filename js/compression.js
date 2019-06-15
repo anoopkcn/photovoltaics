@@ -1,76 +1,149 @@
 var canvas = {
     'name': 'compression',
-    'view': { 'width': 1100, 'height': 650 },
-    'width': 900,
+    'view': { 'width': 1000, 'height': 650 },
+    'width': 1000,
     'height': 650,
     'margin': { 'top': 60, 'right': 60, 'bottom': 60, 'left': 60 },
     'resize': true
 }
 
 var data = {
-    'file': ['viz/band.csv', 'viz/band_test.csv'],
-    'select': {'x':1, 'y':2}, //colums as x axis and y axis
+    'file': ['band.csv', 'band_test.csv'],
+    'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
     'scale': 'linear',
     // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
-    'domain': { 'x':[0, 1.710], 'y': [-9, 5] }
+    'domain': { 'x': [0, 0.82763], 'y': [-4, 5] }
 }
 
-var style={
-    //'style':['styleMAPI', 'stylePI']
-    'style':[
-        {
-            'name': 'MAPI',
+var style = {
+    'style': [{
+            'name': 'MAPI0',
+            'file': "viz/compression/band_1_06.csv",
             'line': {
-                'color': '#a6cee3',
+                'color': '#d3e9f8',
+                'width': 4,
+                'opacity': 1
+            },
+            'legend': {
+                'name': '1.06',
+                'marker': 'rect',
+                'x': 0,
+                'y': -30,
+                'width': 20,
+            },
+        },
+        {
+            'name': 'MAPI1',
+            'file': "viz/compression/band_1_04.csv",
+            'line': {
+                'color': '#a8d3f0',
                 'width': 4,
                 'opacity': 0,
             },
             'marker': {
                 'color': 'red'
             },
-            'dos': {
-                'file':'viz/dos_MAPI.csv',
-                'cols': [1, 2, 5, 6, 7, 13, 14],
-                'color': ['rgba(221, 221, 221, 0.4)', '#aaaaaa', '#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-                'opacity':0
+            'legend': {
+                'name': '1.04',
+                'marker': 'rect',
+                'x': 100,
+                'y': -30,
+                'width': 20,
+            },
+        },
+        {
+            'name': 'MAPI2',
+            'file': "viz/compression/band_1_02.csv",
+            'line': {
+                'color': '#7cbde9',
+                'width': 4,
+                'opacity': 0,
+            },
+            'marker': {
+                'color': 'red'
             },
             'legend': {
-                'name': '$CH_3NH_3PbI_3$'.toTex(),
+                'name': '1.02',
                 'marker': 'rect',
                 'x': 200,
                 'y': -30,
                 'width': 20,
             },
-            'orbital': {
-                'atomIndex': [3, 4, 5, 11, 12],
-                'atomType': ['C', 'N', 'H', 'Pb', 'I'],
-                'atomColor': ['#984EA4', '#FE7F00', '#F782BF', '#4DAF4A', '#E41B1B'],
-                'dosorbital': [' - 2p',' - 2p',' - 1s',' - 6p',' - 5p'],
-                'mode': 'dot',
-                'opacity': 0,
-                // 'mode': 'line' //TODO
-            },
         },
         {
-            'name': 'PI',
+            'name': 'MAPI3',
+            'file': "viz/compression/band_1_00.csv",
             'line': {
-                'color': '#1f78b4',
+                'color': '#51a7e1',
                 'width': 4,
-                'opacity': 1
+                'opacity': 0,
+            },
+            'marker': {
+                'color': 'red'
             },
             'legend': {
-                'name': '$PbI_3^-$'.toTex(),
+                'name': '1.00',
                 'marker': 'rect',
-                'x': 10,
+                'x': 300,
                 'y': -30,
                 'width': 20,
             },
-            'orbital': false,
-            'dos': {
-                'file':'viz/dos_PI.csv',
-                'cols': [1],
-                'color': ['rgba(221, 221, 221, 0.4)'],
-                'opacity':1
+        },
+        {
+            'name': 'MAPI4',
+            'file': "viz/compression/band_0_98.csv",
+            'line': {
+                'color': '#2592da',
+                'width': 4,
+                'opacity': 0,
+            },
+            'marker': {
+                'color': 'red'
+            },
+            'legend': {
+                'name': '0.98',
+                'marker': 'rect',
+                'x': 400,
+                'y': -30,
+                'width': 20,
+            },
+        },
+        {
+            'name': 'MAPI5',
+            'file': "viz/compression/band_0_96.csv",
+            'line': {
+                'color': '#1f78b4',
+                'width': 4,
+                'opacity': 0,
+            },
+            'marker': {
+                'color': 'red'
+            },
+            'legend': {
+                'name': '0.96',
+                'marker': 'rect',
+                'x': 500,
+                'y': -30,
+                'width': 20,
+            },
+        },
+        {
+            'name': 'MAPI6',
+            'file': "viz/compression/band_0_94.csv",
+            'line': {
+                'color': '#1a6699',
+                'width': 4,
+                'opacity': 0,
+            },
+            'marker': {
+                'color': 'red'
+            },
+            'legend': {
+                'name': '0.94',
+                'marker': 'rect',
+                'x': 600,
+                'y': -30,
+                'width': 20,
             },
         }
     ]
@@ -78,23 +151,18 @@ var style={
 }
 
 // resize("#canvas")
-pumba2 = new Draw(canvas)
-svg = pumba2.plot(data)
-var x = pumba2.x
-var y = pumba2.y
+pumba = new Draw(canvas)
+svg = pumba.plot(data)
+var x = pumba.x
+var y = pumba.y
 
 /**
  * setup for axis and ticks
  * @return {svg} 
  */
-const draw2 = async function() {
-    var MAPI = await d3.csv("viz/band.csv", type)
-    var PI = await d3.csv("viz/band_PI.csv", type)
-
+const draw_compression = async function(style) {
     // kmin = Math.min(d3.min(MAPI, d => d.k), d3.min(PI, d => d.k))
     // kmax = Math.max(d3.max(MAPI, d => d.k), d3.max(PI, d => d.k))
-    // emax = 5
-    // emin = -9
 
     var hSym = [
         { 'x': 0.00000, 'label': '$\\Gamma$'.toTex() },
@@ -107,16 +175,16 @@ const draw2 = async function() {
     // Add the x-axis at bottom of the page
     svg.append("g")
         .attr("class", "x-axis")
-        .attr("transform", "translate(0," + (pumba2.height) + ")")
-        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-pumba2.height))
+        .attr("transform", "translate(0," + (pumba.height) + ")")
+        .call(d3.axisBottom(x).tickValues(hSym.map((d) => d.x)).tickFormat((d) => '').tickSize(-pumba.height))
 
     // Add the y-axis.
     svg.append("g")
         .attr("class", "y-axis")
         .attr("transform", "translate(" + 0 + ",0)")
-        .call(d3.axisLeft(y).ticks(7).tickSize(-10));
+        .call(d3.axisLeft(y).ticks(5).tickSize(-10));
 
-    var tx = -25;
+    var tx = -5;
     var ty = 10;
     var tw = 50;
     var th = 50;
@@ -125,7 +193,7 @@ const draw2 = async function() {
         .call(x)
         .selectAll("g").data(hSym).enter().append("foreignObject")
         .attr('class', 'xTicks')
-        .attr("transform", "translate(0," + (pumba2.height) + ")")
+        .attr("transform", "translate(0," + (pumba.height) + ")")
         .attr("width", tw)
         .attr("height", th)
         .attr("x", (d) => x(d.x) + tx)
@@ -134,20 +202,11 @@ const draw2 = async function() {
 
     svg.append('line')
         .attr('class', 'zeroline')
-        .attr('x1', x(pumba2.x.domain()[0]))
+        .attr('x1', x(pumba.x.domain()[0]))
         .attr('y1', y(0))
-        .attr('x2', x(pumba2.x.domain()[1]))
+        .attr('x2', x(pumba.x.domain()[1]))
         .attr('y2', y(0))
         .style("stroke-dasharray", ("6, 1"))
-
-    // trace2( data, style )
-
-    // console.log(style)
-    trace2(MAPI, style.style[0])
-    trace2(PI, style.style[1])
-    legend2(MAPI, style.style[0])
-    legend2(PI, style.style[1])
-
 
     // add the x-axis at top of the page
     svg.append("g")
@@ -158,155 +217,57 @@ const draw2 = async function() {
     // // add the y-axis at right of the page
     // svg.append("g")
     //     .attr("class", "y-axis")
-    //     .attr("transform", "translate(" + (pumba2.width) + ",0)")
+    //     .attr("transform", "translate(" + (pumba.width) + ",0)")
     //     .call(d3.axisRight(y).ticks(7).tickSize(-5).tickFormat((d) => ''))
+
     svg.append("foreignObject")
-            .attr("class", 'y-label')
-            .attr("width", 150)
-            .attr("height", 130)
-            .attr("x",(-1*pumba2.height/1.75))
-            .attr("y",-60)
-            .style("color", 'black')
-            .style('font-size', '16px')
-            .style('text-align', 'left')
-            .style('cursor', 'pointer')
-            .html('$E - E_F$ $(eV)$'.toTex())
-            .attr("transform", "rotate(-90)")
+        .attr("class", 'y-label')
+        .attr("width", 150)
+        .attr("height", 130)
+        .attr("x", (-1 * pumba.height / 1.75))
+        .attr("y", -60)
+        .style("color", 'black')
+        .style('font-size', '16px')
+        .style('text-align', 'left')
+        .style('cursor', 'pointer')
+        .html('$E - E_F$ $(eV)$'.toTex())
+        .attr("transform", "rotate(-90)")
+
+    for (i = 0; i < style.style.length; i++) {
+        var data = await d3.csv(style.style[i].file, type)
+        trace(data, style.style[i])
+        legend(data, style.style[i])
+    }
 }
 
-draw2()
+draw_compression(style)
 
-function trace2(data, style) {
+function trace(data, style) {
+    var band = d3.nest() // nest based on bandindex
+        .key(function(d) { return d[`${data.columns[0]}`] })
+        .entries(data)
+
     var line = d3.line().defined(function(d, i) {
-        var next = 0
-        var dataSize = data.length
-        if (i < dataSize - 1) {
-            next = data[i + 1].k
-            return d.k <= next && d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1];
-        }
+        return d.e >= pumba.y.domain()[0] && d.e <= pumba.y.domain()[1] && d.k <= pumba.x.domain()[1]
     }).x(d => x(d.k)).y(d => y(d.e))
 
     if (style.line) {
         svg.selectAll('band')
-            .data([data]).enter().append("path")
+            .data(band.slice(37, 43)).enter().append("path") //slice(39,42)
             .attr('class', style.name)
             .attr('stroke', style.line.color) //d => bandColor(style.name)
             .attr("stroke-width", style.line.width)
             .attr("opacity", style.line.opacity)
             .attr("fill", 'none')
-            .attr("d", line);
-    }
-
-    if (style.dos) {
-        d3.csv(style.dos.file, type_dos).then(function(dosdata) { dos(dosdata); })
-
-        function dos(dosdata) {
-            lCharge = new Array()
-            for (let il of style.dos.cols) {
-                lCharge.push(dosdata.columns[il])
-            }
-            var lColor = d3.scaleOrdinal().domain(lCharge).range(style.dos.color);
-            // console.log(dosdata.columns.slice(17))
-            var xDos = d3.scaleLinear().range([0, (pumba2.viewWidth - pumba2.width - pumba2.margin.left - pumba2.margin.right)]) //energy
-            var yDos = d3.scaleLinear().range([pumba2.height, 0]) //pdos
-            xDos.domain([0, d3.max(dosdata, d => d.tDOS)])
-            yDos.domain([pumba2.y.domain()[0], pumba2.y.domain()[1]])
-            // Add the x-axis at left of widthinfo
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", "translate(" + (pumba2.viewWidth - pumba2.margin.right - pumba2.margin.left) + ",0)")
-                .call(d3.axisRight(yDos).ticks(7).tickSize(-5).tickFormat((d) => ''));
-
-
-            // Add the y-axis.
-            svg.append("g")
-                .attr("class", "y-axis")
-                .attr("transform", "translate(" + pumba2.width + "," + pumba2.height + ")")
-                .call(d3.axisBottom(xDos).tickFormat((d) => '').tickSize(0))
-
-            // add the x-axis at top of the page
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", "translate(" + pumba2.width + ",-1)")
-                .call(d3.axisTop(xDos).tickFormat((d) => '').tickSize(0))
-
-            for (let Z of lCharge) {
-                var dosline = d3.line().defined(function(d) { return d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1] })
-                    .x(d => xDos(d[`${Z}`]))
-                    .y(d => yDos(d.e));
-                var dosarea = d3.area().defined(function(d) { return d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1] })
-                    .x(d => xDos(d[`${Z}`]))
-                    .y1(d => yDos(d.e))
-                // .y0(widthInfo)
-
-                if (`${Z}` == 'tDOS') {
-                    svg.selectAll('tdos')
-                        .data([dosdata]).enter().append("path")
-                        .attr("transform", "translate(" + pumba2.width + ",0)")
-                        .attr('class',style.name)
-                        .attr('id', 'dos')
-                        .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
-                        .attr("stroke-width", (style.line.width / 2))
-                        .attr("opacity", style.dos.opacity )
-                        .attr("fill", lColor(`${Z}`))
-                        .attr("d", dosarea);
-                } else {
-                    svg.selectAll('dos')
-                        .data([dosdata]).enter().append("path")
-                        .attr("transform", "translate(" + pumba2.width + ",0)")
-                        .attr('class',`atom-${Z}`)
-                        .attr('id', 'orbital')
-                        .attr('stroke', lColor(`${Z}`)) //d => bandColor(style.name)
-                        .attr("stroke-width", (style.line.width / 2))
-                        .style("stroke-dasharray", (d => { return `${Z}` == 'inter' ? ("1, 1") : 'none' }))
-                        .attr("opacity", style.dos.opacity)
-                        .attr("fill", 'none')
-                        .attr("d", dosline);
-                }
-            }
-        }
-    }
-
-    if (style.orbital) {
-        atoms = new Array()
-        for (let iatom of style.orbital.atomIndex) {
-            atoms.push(data.columns[iatom])
-        }
-        // console.log(atoms)
-        var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
-            for (let Z of atoms) {
-                svg.selectAll('dot').data(data.filter(function(d, i) {
-                        return d.e >= pumba2.y.domain()[0] && d.e <= pumba2.y.domain()[1]
-                    }))
-                    .enter().append('circle')
-                    .attr('class', `atom-${Z}`)
-                    .attr('id', 'orbital')
-                    // .on("mouseover", mouseover)
-                    // .on("mousemove", mousemove)
-                    // .on("mouseleave", mouseleave)
-                    .attr('r', d => { if (d[`${Z}`] > 0.001) { return d[`${Z}`] * 8 } else { return 0 } })
-                    .attr('cx', d => x(d.k))
-                    .attr('cy', d => y(d.e))
-                    .attr('fill', atomColor(`${Z}`))
-                    .attr("opacity", style.orbital.opacity);
-            }
+            .attr("d", d => line(d.values));
     }
 }
 
-function legend2(data, style) {
-    // add legend2
+function legend(data, style) {
     if (style.legend) {
         labelMarker(style.legend.marker, style.legend.x, style.legend.y, style.legend.width)
         label(style.legend.x + style.legend.width + 10, style.legend.y + style.legend.width - 20, style.legend.name)
     }
-    if (style.orbital) {
-        // for (let iatom of style.orbital.atomIndex) {
-        //     atoms.push(data.columns[iatom])
-        // }
-        var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
-        subLabelMarker(atoms, pumba2.width + 5, style.legend.y + 5, style.legend.width)
-    }
-
 
     function labelMarker(marker, x, y, r) {
         if (marker == 'rect') {
@@ -362,61 +323,6 @@ function legend2(data, style) {
             })
 
     }
-
-    function subLabelMarker(atoms, x, y, r) {
-        let j = 0
-        for (let i of atoms) {
-            svg.append("rect")
-                .attr('class', `slm-${i}`)
-                .attr('id', 'orbital')
-                .attr("x", (x + j * 40))
-                .attr("y", y)
-                .attr("width", (r / 1.5))
-                .attr("height", (r / 1.5))
-                .attr("fill", atomColor(`${i}`))
-                .attr('opacity', style.orbital.opacity)
-                .style('cursor', 'pointer')
-                .on("click", function(d) {
-                    currentOpacity = d3.selectAll(`.atom-${i}`).style("opacity")
-                    console.log(`.atom-${i}`)
-                    d3.selectAll(`.atom-${i}`).transition().style("opacity", currentOpacity == 0.7 ? 0 : 0.7)
-
-                    labelMarkerOpacity = d3.selectAll(`.slm-${i}`).style("opacity")
-                    d3.selectAll(`.slm-${i}`).transition().style("opacity", labelMarkerOpacity == 0.7 ? 0.2 : 0.7)
-
-                })
-            // console.log(i)
-            svg.append("foreignObject")
-                .attr("class", `slm-${i}`)
-                .attr('id', 'orbital')
-                .attr("width", 40)
-                .attr("height", 30)
-                .attr("x", (x + 15 + j * 40))
-                .attr("y", y - 2)
-                .style("color", atomColor(i))
-                .style("opacity", style.orbital.opacity)
-                .style('font-size', '16px')
-                .style('text-align', 'left')
-                .style('cursor', 'pointer')
-                .html(style.orbital.atomType[j]);
-
-           svg.append("foreignObject")
-                .attr("class", `slm-${i}`)
-                .attr('id', 'orbital')
-                .attr("width", 60)
-                .attr("height", 30)
-                .attr("x", (x + 120))
-                .attr("y", (y+40+ j * 20))
-                .style("color", atomColor(i))
-                .style("opacity", style.orbital.opacity)
-                .style('font-size', '16px')
-                .style('text-align', 'left')
-                .style('cursor', 'pointer')
-                .html(style.orbital.atomType[j]+style.orbital.dosorbital[j]);
-
-            j = j + 1
-        }
-    }
 }
 
 
@@ -427,42 +333,4 @@ function type(d) {
     // d.Z11 = +d.Z11;
     return d;
 }
-
-function type_dos(d) {
-    d.e = +d.e;
-    d.tDOS = +d.tDOS;
-    return d;
-}
-
 var fmt = (a) => d3.format(a)
-// create a tooltip
-// var Tooltip = d3.select("#dataviz")
-//     .append("div")
-//     .style("opacity", 0)
-//     .attr("class", "tooltip")
-
-// // Three function that change the tooltip when user hover / move / leave a cell
-// var mouseover = function(d) {
-//     Tooltip.style("opacity", 1)
-//     d3.select(this)
-//         .attr('r', 6)
-// }
-
-// var mousemove = function(d) {
-//     bgColor = d3.select(this).attr("fill")
-//     symbol = d3.select(this).attr("id") //'MAPI'
-//     Tooltip.attr("alignment-baseline", "middle")
-//         .html(
-//             `<div id='tooltip-left' style="background:${bgColor}">` +
-//             fmt(".2f")(d.e) +
-//             `</div><div id='tooltip-right' style="color:${bgColor}">` +
-//             symbol + `</div>`
-//         )
-//         .style("left", (d3.mouse(this)[0] + 40) + "px")
-//         .style("top", (d3.mouse(this)[1] + 60) + "px")
-// }
-
-// var mouseleave = function(d) {
-//     Tooltip.style("opacity", 0)
-//     d3.select(this).attr('r', 2)
-// }

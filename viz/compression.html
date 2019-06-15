@@ -6,10 +6,14 @@
 <script src="../js/pumbaa.js"></script>
 <div id="compression"></div>
 <style>
+#compression{
+  display: flex;
+  justify-content: center;
+}
 svg {
     display: block;
     margin: auto;
-    margin-top: 50px;
+    /*margin-top: 50px;*/
 }
 
 /* Band And DOS*/
@@ -91,7 +95,7 @@ var data = {
     'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
     'scale': 'linear',
     // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
-    'domain': { 'x': [0, 0.82763], 'y': [-4, 5] }
+    'domain': { 'x': [0, 0.476823529], 'y': [-3, 5.5] }
 }
 
 var style = {
@@ -245,11 +249,11 @@ const draw = async function(style) {
 
     var hSym = [
         { 'x': 0.00000, 'label': '$\\Gamma$'.toTex() },
-        { 'x': 0.45562, 'label': 'R' },
-        { 'x': 0.82763, 'label': 'X' },
-        { 'x': 1.09068, 'label': 'M' },
-        { 'x': 1.46269, 'label': '$\\Gamma$'.toTex() },
-        { 'x': 1.71100, 'label': 'X' }
+        { 'x': 0.265203725, 'label': 'R' }, //0.45562
+        { 'x': 0.476823529, 'label': 'X' }, //0.82763
+        // { 'x': 1.09068, 'label': 'M' },
+        // { 'x': 1.46269, 'label': '$\\Gamma$'.toTex() },
+        // { 'x': 1.71100, 'label': 'X' }
     ]
     // Add the x-axis at bottom of the page
     svg.append("g")
@@ -306,7 +310,7 @@ const draw = async function(style) {
         .attr("x", (-1 * pumba.height / 1.75))
         .attr("y", -60)
         .style("color", 'black')
-        .style('font-size', '16px')
+        .style('font-size', '24px')
         .style('text-align', 'left')
         .style('cursor', 'pointer')
         .html('$E - E_F$ $(eV)$'.toTex())

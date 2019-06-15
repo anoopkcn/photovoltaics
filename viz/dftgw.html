@@ -4,12 +4,16 @@
 <script src="../js/katex/katex.min.js"></script>
 <script src="../js/d3.v5.min.js"></script>
 <script src="../js/pumbaa.js"></script>
-<div id="compression"></div>
+<div id="dftgw"></div>
 <style>
+#dftgw{
+  /*display: flex;*/
+  /*justify-content: center;*/
+}
 svg {
     display: block;
     margin: auto;
-    margin-top: 50px;
+ /*   margin-top: 50px;*/
 }
 
 /* Band And DOS*/
@@ -78,7 +82,7 @@ svg {
 </style>
 <script>
 var canvas = {
-    'name': 'compression',
+    'name': 'dftgw',
     'view': { 'width': 1000, 'height': 650 },
     'width': 1000,
     'height': 650,
@@ -90,7 +94,6 @@ var data = {
     'file': ['band.csv', 'band_test.csv'],
     'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
     'scale': 'linear',
-    // 'range': {'x':[0, canvas.width], 'y':[canvas.height,0]},
     'domain': { 'x': [0, 1.70100], 'y': [-5, 5] }
 }
 
@@ -99,14 +102,15 @@ var style = {
             'name': 'MAPIKS',
             'file': "gw/spexband.csv",
             'select': { 'x': 1, 'y': 2 },
+            'group' : '0',
             'line': {
-                'color': '#1f78b4',
+                'color': '#a6cee3',
                 'smooth': 'spline-cat',
                 'width': 4,
                 'opacity': 1
             },
             'legend': {
-                'name': '$CH_3NH_3PbI_3$ - DFT'.toTex(),
+                'name': 'MAPI - DFT'.toTex(),
                 'marker': 'rect',
                 'x': 0,
                 'y': -30,
@@ -115,24 +119,27 @@ var style = {
         },
         {
             'name': 'MAPIGW',
-            'file': "gw/spexband.csv",
-            'select': { 'x': 1, 'y': 3 },
-            'dot': {
-                'color': '#E48733',
-                'r': 2.5,
-                'opacity': 1,
-                'stroke': '#ffffff',
-                'strokeWidth': 3
-            },
-            // 'line': {
-            //     'color': '#E48733',
-            //     'smooth': 'spline-cat',
-            //     'width': 3,
-            //     'opacity': 0
+            'file': "gw/band_gw.csv",
+            'select': { 'x': 1, 'y': 2 },
+            // 'group' : '0',
+            'math':'2.274363447',
+            // 'group': false,
+            // 'dot': {
+            //     'color': '#FC8D62',
+            //     'r': 2.5,
+            //     'opacity': 1,
+            //     'stroke': '#ffffff',
+            //     'strokeWidth': 3
             // },
+            'line': {
+                'color': '#E48733',
+                'smooth': 'spline-cat',
+                'width': 4,
+                'opacity': 0
+            },
             'legend': {
-                'name': '$CH_3NH_3PbI_3$ - GW'.toTex(),
-                'marker': 'dot',
+                'name': 'MAPI - $GW$'.toTex(),
+                'marker': 'rect',
                 'x': 250,
                 'y': -30,
                 'width': 20,
@@ -218,14 +225,14 @@ const draw = async function(style) {
         .attr("x", (-1 * pumba.height / 1.75))
         .attr("y", -60)
         .style("color", 'black')
-        .style('font-size', '16px')
+        .style('font-size', '24px')
         .style('text-align', 'left')
         .style('cursor', 'pointer')
         .html('$E - E_F$ $(eV)$'.toTex())
         .attr("transform", "rotate(-90)")
 
-    var data = await d3.csv(style.style[0].file, type)
     for (i = 0; i < style.style.length; i++) {
+        var data = await d3.csv(style.style[i].file, type)
         trace(data, style.style[i])
         legend(data, style.style[i])
     }
@@ -236,14 +243,27 @@ draw(style)
 function trace(data, style) {
     var xcol = `${data.columns[style.select.x]}`
     var ycol = `${data.columns[style.select.y]}`
-    var band = d3.nest() // nest based on bandindex
-        .key(function(d) { return d[`${data.columns[0]}`] })
+    var line, band
+
+    if(style.group){
+        band = d3.nest() // nest based on bandindex
+        .key(function(d) { return d[`${data.columns[style.group]}`] })
         .entries(data)
 
-    var line = d3.line().defined(function(d, i) {
+        line = d3.line().defined(function(d, i) {
         return +d[ycol] >= pumba.y.domain()[0] && +d[ycol] <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
-    }).x(d => x(+d[xcol])).y(d => y(+d[ycol]))
+        }).x(d => x(+d[xcol])).y(d => y(+d[ycol]))
 
+    }else{
+        line = d3.line().defined(function(d, i) {
+            var next = 0
+            var dataSize = data.length
+            if (i < dataSize - 1) {
+                next = data[i + 1][xcol]
+                return d[xcol] <= next && +d[ycol]-(+style.math) >= pumba.y.domain()[0] && +d[ycol]-(+style.math) <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
+            }
+            }).x(d => x(+d[xcol])).y(d => y(+d[ycol]-(+style.math)))
+    }
 
     if (style.line) {
         if (style.line.smooth) {
@@ -251,7 +271,8 @@ function trace(data, style) {
                 line.curve(d3.curveCatmullRom)
             }
         }
-        svg.selectAll('band')
+        if(style.group){
+            svg.selectAll('band')
             .data(band).enter().append("path") //slice(39,42)
             .attr('class', style.name)
             .attr('stroke', style.line.color) //d => bandColor(style.name)
@@ -259,10 +280,21 @@ function trace(data, style) {
             .attr("opacity", style.line.opacity)
             .attr("fill", 'none')
             .attr("d", d => line(d.values));
+        }else{
+            svg.selectAll('band')
+            .data([data]).enter().append("path") //slice(39,42)
+            .attr('class', style.name)
+            .attr('stroke', style.line.color) //d => bandColor(style.name)
+            .attr("stroke-width", style.line.width)
+            .attr("opacity", style.line.opacity)
+            .attr("fill", 'none')
+            .attr("d", line);
+        }
     }
     if (style.dot) {
         svg.selectAll('dot').data(data.filter(function(d, i) {
-                return d[ycol] >= pumba.y.domain()[0] && d[ycol] <= pumba.y.domain()[1]
+                return +d[ycol] >= pumba.y.domain()[0] && +d[ycol] <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
+                //d[ycol] >= pumba.y.domain()[0] && d[ycol] <= pumba.y.domain()[1]
             }))
             .enter().append('circle')
             .attr('class', style.name)
@@ -310,7 +342,7 @@ function legend(data, style) {
                 .attr("cy", (y + 10))
                 .attr("fill", style.dot.color)
                 .attr('opacity', style.dot.opacity)
-                .style('cursor', 'pointer')
+                // .style('cursor', 'pointer')
                 .on("click", function(d) {
                     currentOpacity = d3.selectAll("." + style.name).style("opacity")
                     d3.selectAll("." + style.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)

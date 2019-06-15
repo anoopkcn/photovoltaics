@@ -37,7 +37,7 @@ var style={
             'legend': {
                 'name': '$CH_3NH_3PbI_3$'.toTex(),
                 'marker': 'rect',
-                'x': 200,
+                'x': 370,
                 'y': -30,
                 'width': 20,
             },
@@ -77,7 +77,7 @@ var style={
 
 }
 
-// resize("#canvas")
+resize("#dataviz")
 pumba = new Draw(canvas)
 svg = pumba.plot(data)
 var x = pumba.x
@@ -167,7 +167,7 @@ const draw = async function() {
             .attr("x",(-1*pumba.height/1.75))
             .attr("y",-60)
             .style("color", 'black')
-            .style('font-size', '16px')
+            .style('font-size', '24px')
             .style('text-align', 'left')
             .style('cursor', 'pointer')
             .html('$E - E_F$ $(eV)$'.toTex())
@@ -296,8 +296,8 @@ function trace(data, style) {
 function legend(data, style) {
     // add legend
     if (style.legend) {
-        labelMarker(style.legend.marker, style.legend.x, style.legend.y, style.legend.width)
-        label(style.legend.x + style.legend.width + 10, style.legend.y + style.legend.width - 20, style.legend.name)
+        labelMarker(style.legend.marker, style.legend.x, style.legend.y-10, style.legend.width)
+        label(style.legend.x + style.legend.width + 10, style.legend.y-20 + style.legend.width - 20, style.legend.name)
     }
     if (style.orbital) {
         // for (let iatom of style.orbital.atomIndex) {
@@ -317,17 +317,17 @@ function legend(data, style) {
                 .attr("width", r)
                 .attr("height", r)
                 .attr("fill", style.line.color)
-                .attr('opacity', d => style.line.opacity == 0 ? 0.2 : style.line.opacity)
+                .attr('opacity', d => style.line.opacity == 0 ? 0.5 : style.line.opacity)
                 .style('cursor', 'pointer')
                 .on("click", function(d) {
                     currentOpacity = d3.selectAll("." + style.name).style("opacity")
                     d3.selectAll("." + style.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
 
                     labelMarkerOpacity = d3.selectAll(`.lm-${style.name}`).style("opacity")
-                    d3.selectAll(`.lm-${style.name}`).transition().style("opacity", labelMarkerOpacity == 1 ? 0.2 : 1)
+                    d3.selectAll(`.lm-${style.name}`).transition().style("opacity", labelMarkerOpacity == 1 ? 0.5 : 1)
 
                 })
-        } else if (marker = 'dot') {
+        } else if (marker == 'dot') {
             svg.append("circle")
                 .attr('id', `lm-${style.name}`)
                 .attr("r", (r / 2))
@@ -344,13 +344,13 @@ function legend(data, style) {
     function label(x, y, labeltext) {
         svg.append("foreignObject")
             .attr("class", `lm-${style.name}`)
-            .attr("width", 150)
-            .attr("height", 30)
+            .attr("width", 250)
+            .attr("height", 50)
             .attr("x", x)
             .attr("y", y)
             .style("color", style.line.color)
             .style("opacity", style.line.opacity)
-            .style('font-size', '16px')
+            .style('font-size', '30px')
             .style('text-align', 'left')
             .style('cursor', 'pointer')
             .html(labeltext)
