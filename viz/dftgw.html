@@ -110,7 +110,7 @@ var style = {
                 'opacity': 1
             },
             'legend': {
-                'name': 'MAPI - DFT'.toTex(),
+                'name': 'MAPI - KS'.toTex(),
                 'marker': 'rect',
                 'x': 0,
                 'y': -30,
@@ -312,7 +312,7 @@ function trace(data, style) {
 function legend(data, style) {
     if (style.legend) {
         labelMarker(style.legend.marker, style.legend.x, style.legend.y, style.legend.width)
-        label(style.legend.marker, style.legend.x + style.legend.width + 10, style.legend.y + style.legend.width - 20, style.legend.name)
+        label(style.legend.marker, style.legend.x + style.legend.width + 10, style.legend.y-5 + style.legend.width - 20, style.legend.name)
     }
 
     function labelMarker(marker, x, y, r) {
@@ -363,7 +363,7 @@ function legend(data, style) {
             .attr("height", 30)
             .attr("x", x)
             .attr("y", y)
-            .style('font-size', '16px')
+            .style('font-size', '26px')
             .style('text-align', 'left')
             .style('cursor', 'pointer')
             .html(labeltext)
