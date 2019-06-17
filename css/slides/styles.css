@@ -101,6 +101,9 @@ green: #5C9A2E
     grid-column-gap: 20px;
     grid-row-gap: 10px;
 }
+.fineal-slide ul >li{
+  margin: 15px 0;
+}
 .summary{
   border: 1px solid #ccc;
 }

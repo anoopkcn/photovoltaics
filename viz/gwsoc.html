@@ -94,19 +94,19 @@ var data = {
     'file': ['band.csv', 'band_test.csv'],
     'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
     'scale': 'linear',
-    'domain': { 'x': [0, 1.70100], 'y': [-5, 5] }
+    'domain': { 'x': [0, 1.46269], 'y': [-4, 5.5] }
 }
 
 var style = {
     'style': [{
             'name': 'MAPIKS',
-            'file': "gw/spexband.csv",
-            'select': { 'x': 1, 'y': 2 },
-            'group' : '0',
+            'file': "gw/band_ks_soc.csv",
+            'select': { 'x': 0, 'y': 1 },
+            'shift':'2.3',
             'line': {
                 'color': '#a6cee3',
                 'smooth': 'spline-cat',
-                'width': 4,
+                'width': 3,
                 'opacity': 1
             },
             'legend': {
@@ -119,10 +119,10 @@ var style = {
         },
         {
             'name': 'MAPIGW',
-            'file': "gw/band_gw.csv",
-            'select': { 'x': 1, 'y': 2 },
+            'file': "gw/band_gw_soc.csv",
+            'select': { 'x': 0, 'y': 1 },
             // 'group' : '0',
-            'shift':'2.274363447',
+            'shift':'2.65',
             // 'group': false,
             // 'dot': {
             //     'color': '#FC8D62',
@@ -134,7 +134,7 @@ var style = {
             'line': {
                 'color': '#E48733',
                 'smooth': 'spline-cat',
-                'width': 4,
+                'width': 3,
                 'opacity': 0
             },
             'legend': {
