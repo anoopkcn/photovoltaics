@@ -94,7 +94,7 @@ var data = {
     'file': ['band.csv', 'band_test.csv'],
     'select': { 'x': 1, 'y': 2 }, //colums as x axis and y axis
     'scale': 'linear',
-    'domain': { 'x': [0, 1.70100], 'y': [-5, 5] }
+    'domain': { 'x': [0, 1.70100], 'y': [-5, 9] }
 }
 
 var style = {
@@ -122,7 +122,7 @@ var style = {
             'file': "gw/band_gw.csv",
             'select': { 'x': 1, 'y': 2 },
             // 'group' : '0',
-            'shift':'2.274363447',
+            'shift':'-2.274363447',
             // 'group': false,
             // 'dot': {
             //     'color': '#FC8D62',
@@ -141,6 +141,34 @@ var style = {
                 'name': 'MAPI - $GW$'.toTex(),
                 'marker': 'rect',
                 'x': 250,
+                'y': -30,
+                'width': 20,
+            },
+        },
+        {
+            'name': 'MAPIHF',
+            'file': "gw/band_hf.csv",
+            'select': { 'x': 0, 'y': 1 },
+            // 'group' : '0',
+            'shift':'-0.984363447',
+            // 'group': false,
+            // 'dot': {
+            //     'color': '#FC8D62',
+            //     'r': 2.5,
+            //     'opacity': 1,
+            //     'stroke': '#ffffff',
+            //     'strokeWidth': 3
+            // },
+            'line': {
+                'color': '#5C9A2E',
+                'smooth': 'spline-cat',
+                'width': 4,
+                'opacity': 0
+            },
+            'legend': {
+                'name': 'MAPI - HF',
+                'marker': 'rect',
+                'x': 500,
                 'y': -30,
                 'width': 20,
             },
@@ -260,9 +288,9 @@ function trace(data, style) {
             var dataSize = data.length
             if (i < dataSize - 1) {
                 next = data[i + 1][xcol]
-                return d[xcol] <= next && +d[ycol]-(+style.shift) >= pumba.y.domain()[0] && +d[ycol]-(+style.shift) <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
+                return d[xcol] <= next && +d[ycol]+(+style.shift) >= pumba.y.domain()[0] && +d[ycol]+(+style.shift) <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
             }
-            }).x(d => x(+d[xcol])).y(d => y(+d[ycol]-(+style.shift)))
+            }).x(d => x(+d[xcol])).y(d => y(+d[ycol]+(+style.shift)))
     }
 
     if (style.line) {
