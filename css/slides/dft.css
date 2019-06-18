@@ -27,7 +27,7 @@ svg {
 #tooltip-right {
     float: left;
     padding: 2px;
-    color: #625F5D;
+    color: #222222;
     background: hsla(0, 0%, 100%, 0.525);
     /* opacity: 0.5; */
 }
@@ -35,17 +35,17 @@ svg {
 .x-axis text,
 .y-axis text {
     font-size: 20px;
-    fill: #625F5D;
+    fill: #222222;
 }
 
 .x-axis line,
 .y-axis line {
-    stroke: #625F5D;
+    stroke: #222222;
 }
 
 .x-axis path,
 .y-axis path {
-    stroke: #BFBFBA;
+    stroke: #222222;
     stroke-width: 2px;
 }
 
@@ -54,7 +54,7 @@ svg {
 }
 
 .xTicks {
-    color: #625F5D;
+    color: #222222;
     /*font-size: 20px;*/
     font: normal 1.30em KaTeX_Main, Times New Roman, serif;
 }

@@ -304,7 +304,7 @@ function legend(data, style) {
         //     atoms.push(data.columns[iatom])
         // }
         var atomColor = d3.scaleOrdinal().domain(atoms).range(style.orbital.atomColor);
-        subLabelMarker(atoms, pumba.width + 5, style.legend.y + 5, style.legend.width)
+        subLabelMarker(atoms, pumba.width -20, style.legend.y + 5, style.legend.width)
     }
 
 
@@ -369,7 +369,7 @@ function legend(data, style) {
             svg.append("rect")
                 .attr('class', `slm-${i}`)
                 .attr('id', 'orbital')
-                .attr("x", (x + j * 40))
+                .attr("x", (x + j * 50))
                 .attr("y", y)
                 .attr("width", (r / 1.5))
                 .attr("height", (r / 1.5))
@@ -391,11 +391,11 @@ function legend(data, style) {
                 .attr('id', 'orbital')
                 .attr("width", 40)
                 .attr("height", 30)
-                .attr("x", (x + 15 + j * 40))
-                .attr("y", y - 2)
+                .attr("x", (x + 15 + j * 50))
+                .attr("y", (y - 7))
                 .style("color", atomColor(i))
                 .style("opacity", style.orbital.opacity)
-                .style('font-size', '16px')
+                .style('font-size', '24px')
                 .style('text-align', 'left')
                 .style('cursor', 'pointer')
                 .html(style.orbital.atomType[j]);
@@ -403,13 +403,13 @@ function legend(data, style) {
            svg.append("foreignObject")
                 .attr("class", `slm-${i}`)
                 .attr('id', 'orbital')
-                .attr("width", 60)
+                .attr("width", 100)
                 .attr("height", 30)
                 .attr("x", (x + 120))
                 .attr("y", (y+40+ j * 20))
                 .style("color", atomColor(i))
                 .style("opacity", style.orbital.opacity)
-                .style('font-size', '16px')
+                .style('font-size', '24px')
                 .style('text-align', 'left')
                 .style('cursor', 'pointer')
                 .html(style.orbital.atomType[j]+style.orbital.dosorbital[j]);
