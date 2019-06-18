@@ -100,9 +100,9 @@ var data = {
 var style = {
     'style': [{
             'name': 'MAPIKS',
-            'file': "gw/band_ks_soc.csv",
+            'file': "gw/band_dft_soc.csv",
             'select': { 'x': 0, 'y': 1 },
-            'shift':'2.3',
+            'shift':'-0.15',
             'line': {
                 'color': '#a6cee3',
                 // 'smooth': 'spline-cat',
@@ -122,24 +122,24 @@ var style = {
             'file': "gw/band_gw_soc.csv",
             'select': { 'x': 0, 'y': 1 },
             // 'group' : '0',
-            'shift':'2.65',
+            'shift':'2.20',
             // 'group': false,
-            // 'dot': {
-            //     'color': '#FC8D62',
-            //     'r': 2.5,
-            //     'opacity': 1,
-            //     'stroke': '#ffffff',
-            //     'strokeWidth': 3
-            // },
-            'line': {
+            'dot': {
                 'color': '#E48733',
-                // 'smooth': 'spline-cat',
-                'width': 4,
-                'opacity': 0
+                'r': 6,
+                'opacity': 1,
+                'stroke': '#ffffff',
+                'strokeWidth': 3
             },
+            // 'line': {
+            //     'color': '#E48733',
+            //     // 'smooth': 'spline-cat',
+            //     'width': 4,
+            //     'opacity': 0
+            // },
             'legend': {
                 'name': 'MAPI - $G^{soc}W^{soc}$'.toTex(),
-                'marker': 'rect',
+                'marker': 'dot',
                 'x': 250,
                 'y': -30,
                 'width': 20,
@@ -293,7 +293,7 @@ function trace(data, style) {
     }
     if (style.dot) {
         svg.selectAll('dot').data(data.filter(function(d, i) {
-                return +d[ycol] >= pumba.y.domain()[0] && +d[ycol] <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
+                return +d[ycol] >= pumba.y.domain()[0] && +d[ycol]-(+style.shift) <= pumba.y.domain()[1] && +d[xcol] <= pumba.x.domain()[1]
                 //d[ycol] >= pumba.y.domain()[0] && d[ycol] <= pumba.y.domain()[1]
             }))
             .enter().append('circle')
@@ -301,7 +301,7 @@ function trace(data, style) {
             .attr('id', 'gw')
             .attr('r', style.dot.r)
             .attr('cx', d => x(d[xcol]))
-            .attr('cy', d => y(d[ycol]))
+            .attr('cy', d => y(d[ycol]-(+style.shift)))
             .attr('fill', style.dot.color)
             // .attr('stroke', style.dot.stroke)
             // .attr('stroke-width', style.dot.strokeWidth)

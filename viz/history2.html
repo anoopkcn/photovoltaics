@@ -21,23 +21,23 @@ path.area {
 .axis {
   shape-rendering: crispEdges;
 }
-.tooltip {	
-  position: absolute;			
+.tooltip {  
+  position: absolute;     
   text-align: center;
-  /* height: 28px;					 */			
-  font: 12px sans-serif;		
-  border: 0px;	
-  pointer-events: none;		
-  font-size: 16px;	
+  /* height: 28px;           */     
+  font: 12px sans-serif;    
+  border: 0px;  
+  pointer-events: none;   
+  font-size: 16px;  
 }
 #tooltip-left{
   color:#ffffff;
-  padding: 2px;	
+  padding: 2px; 
   float: left;
 }
 #tooltip-right{
   float: left;
-  padding: 2px;	
+  padding: 2px; 
   color:#625F5D;
   background: hsla(0, 0%, 100%, 0.525);
   /* opacity: 0.5; */
@@ -48,8 +48,8 @@ path.area {
   clear:both;
 }
 .x-axis text, .y-axis text{
-	font-size: 20px;
-	fill:#625F5D;
+  font-size: 20px;
+  fill:#625F5D;
 }
 .x-axis line, .y-axis line{
   stroke: #625F5D;
@@ -66,7 +66,7 @@ svg circle{
 </style>
 
 <script>
-var margin = {top: 60, right: 60, bottom: 60, left: 60},
+var margin = {top: 60, right: 60, bottom: 60, left: 70},
     width = 1000 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 //time duration for the transition
@@ -136,7 +136,7 @@ function draw(data){
   // Add the x-axis.
   svg.append("g")
       .attr("class", "x-axis")
-			.attr("transform", "translate(0," + (height) + ")")
+      .attr("transform", "translate(0," + (height) + ")")
       .call(d3.axisBottom(x).ticks(10)); //.tickSize(-height)
 
   // Add the y-axis.
@@ -144,11 +144,24 @@ function draw(data){
       .attr("class", "y-axis")
       .attr("transform", "translate(" + -1 + ",0)")
       .call(d3.axisLeft(y).ticks(6));//.tickSize(-width)
+
+  svg.append("foreignObject")
+        .attr("class", 'y-label')
+        .attr("width", 150)
+        .attr("height", 130)
+        .attr("x", (-1 * height / 1.75))
+        .attr("y", -70)
+        .style("color", 'black')
+        .style('font-size', '24px')
+        .style('text-align', 'left')
+        .style('cursor', 'pointer')
+        .html('PCE (%)')
+        .attr("transform", "rotate(-90)")
     
   var data_single=[GaAs, Si, CdTe]
   var data_single_new=[ Sb_Based,  MAPI, Bi_Based]
   var name_single=['GaAs', 'Si', 'CdTe']
-  var name_single_new=[ 'Sb-Based',  "MAPI (CH$_3$NH$_3$PbI$_3$)".toTex(), 'Bi-Based']
+  var name_single_new=[ 'Sb-Based',  "CH$_3$NH$_3$PbI$_3$".toTex(), 'Bi-Based']
   var color_single=['#6ba547','#4876B0', '#E48734']
   var color_single_new=[ '#659792',  '#D1576E', '#C76BBD']
   var data_multi=[Junc4, Junc3, Junc2]
@@ -227,7 +240,7 @@ function legend(names,colors,x_pos,cls){
       .enter().append("circle")
       .attr("r", (8-(7-(l*2))))
       .attr("cx", x_pos)
-      .attr("cy", k*25)
+      .attr("cy", k*30)
       .attr("fill", colors[k])
       .attr("stroke", '#ffffff')
       .attr("stroke-width", 1)
@@ -241,10 +254,11 @@ function legend(names,colors,x_pos,cls){
     svg.selectAll("mylabels2").data(names)
       .enter().append("foreignObject")
       .attr("width", 150)
-      .attr("height", 20)
+      .attr("height", 30)
       .attr("x", x_pos+20)
-      .attr("y", function(d,i){ return i*25-10})
+      .attr("y", function(d,i){ return i*30-15})
       .style("color", function(d,i){ return colors[i]})
+      .style("font-size","24px")
       // .style("font", "14px 'Helvetica Neue'")
       .html(function(d){ return d})
       .attr("opacity",0)
@@ -256,7 +270,7 @@ function legend(names,colors,x_pos,cls){
     .enter().append("circle")
     .attr("r", 6)
     .attr("cx", x_pos)
-    .attr("cy", function(d,i){ return 75+i*25})
+    .attr("cy", function(d,i){ return 105+i*30})
     .attr("fill", function(d,i){ return colors[i]})
     .attr("stroke", '#ffffff')
     .attr("stroke-width", 1)
@@ -268,10 +282,11 @@ function legend(names,colors,x_pos,cls){
   svg.selectAll("mylabels2").data(names)
     .enter().append("foreignObject")
     .attr("width", 150)
-    .attr("height", 20)
+    .attr("height", 30)
     .attr("x", x_pos+20)
-    .attr("y", function(d,i){ return 75+i*25-10})
+    .attr("y", function(d,i){ return 90+i*30})
     .style("color", function(d,i){ return colors[i]})
+    .style("font-size","24px")
     // .style("font", "14px 'Helvetica Neue'")
     .html(function(d){ return d})
     .attr("opacity",0)
@@ -283,7 +298,7 @@ function legend(names,colors,x_pos,cls){
     .enter().append("circle")
     .attr("r", 6)
     .attr("cx", x_pos)
-    .attr("cy", function(d,i){ return i*25})
+    .attr("cy", function(d,i){ return i*30})
     .attr("fill", function(d,i){ return colors[i]})
     .attr("stroke", '#ffffff')
     .attr("stroke-width", 1)
@@ -295,10 +310,11 @@ function legend(names,colors,x_pos,cls){
   svg.selectAll("mylabels2").data(names)
     .enter().append("foreignObject")
     .attr("width", 150)
-    .attr("height", 20)
+    .attr("height", 30)
     .attr("x", x_pos+20)
-    .attr("y", function(d,i){ return i*25-10})
+    .attr("y", function(d,i){ return i*30-15})
     .style("color", function(d,i){ return colors[i]})
+    .style("font-size","24px")
     // .style("font", "14px 'Helvetica Neue'")
     .html(function(d){ return d})
     .attr("opacity",0)
@@ -310,7 +326,7 @@ function legend(names,colors,x_pos,cls){
     .enter().append("circle")
     .attr("r", 6)
     .attr("cx", x_pos)
-    .attr("cy", function(d,i){ return i*25})
+    .attr("cy", function(d,i){ return i*30})
     .attr("fill", function(d,i){ return colors[i]})
     .attr("stroke", '#ffffff')
     .attr("stroke-width", 1)
@@ -322,10 +338,11 @@ function legend(names,colors,x_pos,cls){
   svg.selectAll("mylabels2").data(names)
     .enter().append("foreignObject")
     .attr("width", 150)
-    .attr("height", 20)
+    .attr("height", 30)
     .attr("x", x_pos+20)
-    .attr("y", function(d,i){ return i*25-10})
+    .attr("y", function(d,i){ return i*30-15})
     .style("color", function(d,i){ return colors[i]})
+    .style("font-size","24px")
     // .style("font", "14px 'Helvetica Neue'")
     .html(function(d){ return d})
   }
@@ -347,12 +364,13 @@ function legend(names,colors,x_pos,cls){
   svg.selectAll("labels").data([lhead])
   .enter().append("text")
   .attr('class','legend-head')
-    .attr("x", x_pos)
+    .attr("x", (x_pos-5))
     .attr("y", -30) 
     .attr("fill", '#8B8783')
     .text(function(d){ return d})
     .attr("text-anchor", "left")
     .attr("alignment-baseline", "middle")
+    .style("font-size","24px")
     .attr("opacity",0)
     .transition()
     .delay(dur)
